@@ -54,32 +54,12 @@ void file_i_o()
 	#endif
 }
 
-int a = 0, b=1, c=1,d=1;
 
-void matrix_expo(ll n){
-	ll x=0,y=1;
-	while(n){
-		if(n&1) {
-			x = (a*x)+(b*y);
-			y = (x*c)+(d*y);
-		}
-		a = (a*a)+(b*c);
-		b = (a*b)+(b*d);
-		c = (a*c)+(c*d);
-		d = (c*b)+(d*d);
-		n/=2;
-	}
-	cout<<x<<" "<<y;
-}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
-	ll n;
-	cin>>n;
-
 
 
 	#ifndef ONLINE_JUDGE 

@@ -8,7 +8,7 @@
 using namespace std;
 #define ll 				long long int
 #define ld				long double
-#define mod             1000000007
+#define MOD             1000000007
 #define inf             1e18
 #define endl			"\n"
 #define pb 				push_back
@@ -54,31 +54,80 @@ void file_i_o()
 	#endif
 }
 
-int a = 0, b=1, c=1,d=1;
+ll mod_mul(ll a, ll b, ll n){
+    ll ans = 0;
+    while(b){
+        if(b&1) ans+=a;
+        a*=2;
+        a%=n;
+        ans%=n;
+        b/=2;
+    }
+    return ans;
+}
 
-void matrix_expo(ll n){
-	ll x=0,y=1;
-	while(n){
-		if(n&1) {
-			x = (a*x)+(b*y);
-			y = (x*c)+(d*y);
-		}
-		a = (a*a)+(b*c);
-		b = (a*b)+(b*d);
-		c = (a*c)+(c*d);
-		d = (c*b)+(d*d);
-		n/=2;
-	}
-	cout<<x<<" "<<y;
+ll mod_exp(ll a, ll b, ll n){
+    ll ans = 1;
+    while(b){
+        if(b&1) ans = mod_mul(ans,a,n);
+        a = mod_mul(a,a,n);
+        a%=n;
+        b/=2;
+    }
+    return ans;
+}
+
+bool check(ll n){
+    if(n==1) return false;
+    if(n==2) return true;
+    if(n%2==0) return false;
+
+    //find d;
+    ll d = n-1,s=0;
+    while(d%2!=0) {
+        d/=2;
+        s++;
+    }
+
+    int a[] = {2,3,5,7,11,13,17,19,23};
+
+    for(int i=0; i<9; i++){
+        if(a[i]>n-2) continue;
+        //calc a^d
+        ll res = mod_exp(a[i],d,n);
+        if(res%n==1) continue;
+        bool prime = false;
+        for(int r = 0; r<=s-1; r++){
+            ll ans = mod_exp(2,r,n);
+            ll finalans = mod_exp(res,ans,n);
+            if(finalans%n==n-1 or finalans%n==1) {
+                prime = true;
+                break;
+            }
+        }
+        if(not prime) return false;
+    }
+    return true;
+
+    
+
 }
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
-	ll n;
-	cin>>n;
+    int t;
+    cin>>t;
+    while(t--){
+        ll n;
+        cin>>n;
+        if(check(n)){
+            cout<<"Prime"<<endl;
+        } else {
+            cout<<"Not Prime"<<endl;
+        }
+    }
 
 
 

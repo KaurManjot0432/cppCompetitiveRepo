@@ -1,0 +1,13 @@
+Prime
+Not Prime
+Not Prime
+Not Prime
+Not Prime
+Not Prime
+Prime
+Not Prime
+Prime
+Not Prime
+
+
+Executed In: 0.418 ms

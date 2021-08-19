@@ -54,32 +54,44 @@ void file_i_o()
 	#endif
 }
 
-int a = 0, b=1, c=1,d=1;
+#define N 100005
 
-void matrix_expo(ll n){
-	ll x=0,y=1;
-	while(n){
-		if(n&1) {
-			x = (a*x)+(b*y);
-			y = (x*c)+(d*y);
-		}
-		a = (a*a)+(b*c);
-		b = (a*b)+(b*d);
-		c = (a*c)+(c*d);
-		d = (c*b)+(d*d);
-		n/=2;
-	}
-	cout<<x<<" "<<y;
+int cnt[N];
+int chk[N];
+int mob[N];
+
+void mobius_gen(){
+    for(int i=0; i<N; i++) {
+        chk[i] = 1;
+        cnt[i] = 0;
+    }
+    for(int i=2; i<N; i++){
+        if(cnt[i]) continue;//if num is composite
+        for(int j=i; j<N; j+=i){
+            chk[j]*=i;
+            cnt[j]++;
+        }
+    }
+
+    for(int i=1; i<N; i++){
+        if(chk[i]==i){
+            if(cnt[i]&1) mob[i] = -1;
+            else mob[i] = 1;
+        } else {
+            mob[i] =  0;
+        }
+    }
 }
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
-	ll n;
-	cin>>n;
-
+    mobius_gen();
+    loop(i,1,30) cout<<i<<"  ";
+    cout<<endl;
+    loop(i,1,30) cout<<mob[i]<<"  ";
+    cout<<endl;
 
 
 	#ifndef ONLINE_JUDGE 
