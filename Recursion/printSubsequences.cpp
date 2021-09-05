@@ -54,44 +54,23 @@ void file_i_o()
 	#endif
 }
 
+void printSubseq(string &s, int i,string sofar){
+    if(i>=s.size()){
+        cout<<sofar<<"\n";
+		return;
+    }
+    printSubseq(s,i+1,sofar+s[i]);
+    printSubseq(s,i+1,sofar);
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	string s;
+    cin>>s;
+
+    printSubseq(s,0,"");
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

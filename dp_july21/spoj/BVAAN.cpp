@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.spoj.com/problems/BVAAN/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -53,45 +53,47 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+#define N 105
+ll dp[N][N][N];
+string a,b;
+ll max_blessing(int i, int j, int k){
+	if(k==0) return 0;
+	if(i<0 or j<0) return -1;
+
+	if(dp[i][j][k]!=-2) return dp[i][j][k];
+
+	ll score1 = -1;
+	if(a[i]==b[j]){
+		score1 = max_blessing(i-1,j-1,k-1);
+		score1 = score1==-1 ? -1 : score1+a[i];
+	}
+	ll score2 = max_blessing(i,j-1,k);
+	ll score3 = max_blessing(i-1,j,k);
+	return dp[i][j][k] = max(score1,max(score2,score3));
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
 	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
+    cin>>t;
+    while(t--){
+        cin>>a>>b;
+        int k;
+        cin>>k;
+		loop(i,0,N-1){
+			loop(j,0,N-1){
+				loop(k,0,N-1){
+					dp[i][j][k] = -2;
 				}
-			
 			}
 		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+		ll ans = max_blessing(a.size()-1, b.size()-1,k);
+		ans = ans==-1?0 : ans;
+		cout<<ans<<"\n";
+    }
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

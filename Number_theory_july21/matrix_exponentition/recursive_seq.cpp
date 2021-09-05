@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.spoj.com/problems/SEQ/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -8,7 +8,7 @@
 using namespace std;
 #define ll 				long long int
 #define ld				long double
-#define mod             1000000007
+#define mod             1000000000
 #define inf             1e18
 #define endl			"\n"
 #define pb 				push_back
@@ -54,44 +54,85 @@ void file_i_o()
 	#endif
 }
 
+int k;
+ll f1[11],arr[11];
+vector<vector<ll>> T(11,vector<ll>(11,0));
+
+
+vector<vector<ll>> multiply(vector<vector<ll>> &a, vector<vector<ll>> &b){
+    vector<vector<ll>> c(k+1,vector<ll>(k+1,0));
+    for(int i=1; i<=k; i++){
+        for(int j=1; j<=k; j++){
+            for(int x=1; x<=k; x++){
+                c[i][j] = (c[i][j]+(a[i][x]*b[x][j])%mod)%mod;
+            }
+        }
+    }
+    return c;
+}
+//calculates a^(n-1)
+void power(vector<vector<ll>> &a,ll n){
+    if(n==1) return;
+    power(a,n/2);
+    a = multiply(a,a);
+    if(n&1){
+        a = multiply(a,T);
+    }
+}
+
+ll fib(ll n){
+    if(n<=k){
+        return f1[n];
+    }
+    auto a(T);
+    power(a,n-k);
+    ll ans=0;
+
+    for(int i=1; i<=k; i++){
+        ans = (ans+(a[k][i]*f1[i])%mod)%mod;
+    }
+    return ans;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+    int t;
+    cin>>t;
+    while(t--){
+        cin>>k;
+        loop(i,1,k) {
+            cin>>f1[i];
+            f1[i] %= mod;
+        }
+        loop(i,1,k) cin>>arr[i];
+
+        //find Transformation matrix
+        for(int i=1; i<=k; i++){
+            for(int j=1; j<=k; j++) T[i][j] = 0;
+        }
+        for(int i=1; i<k; i++){
+            T[i][i+1] = 1;
+        }
+        for(int i=1; i<=k; i++){
+            // log(arr[k-i-1]);
+            T[k][i] = arr[k-i+1];
+        }
+     
+        // for(int i=1; i<=k; i++){
+        //     for(int j=1; j<=k; j++){
+        //         cout<<y[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+
+        ll n;
+        cin>>n;
+        cout<<(fib(n))<<endl;
+    }
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

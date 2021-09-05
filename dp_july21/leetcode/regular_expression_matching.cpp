@@ -54,44 +54,34 @@ void file_i_o()
 	#endif
 }
 
+bool isMatch(string &s, string &p, int i, int j) {
+    if(i<0 and j<0) return true;
+    if(j<0) return false;
+    if(i<0){
+        if(p[j]!='*') return false;
+        return isMatch(s,p,i,j-2);
+    }
+
+    if(s[i]==p[j] or p[j]=='.') return isMatch(s,p,i-1,j-1);
+
+    if(p[j]=='*') {
+        bool ans1=false,ans2=false;
+        if(p[j-1]=='.' or p[j-1]==s[i]) ans1 = isMatch(s,p,i-1,j);
+        //zero occurance
+        ans2 = isMatch(s,p,i,j-2);
+        return (ans1 or ans2);
+    }
+    return false;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+    string s,p;
+    cin>>s>>p;
+    log(isMatch(s,p,s.size()-1,p.size()-1));
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

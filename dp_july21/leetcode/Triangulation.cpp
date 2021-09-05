@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://leetcode.com/problems/minimum-score-triangulation-of-polygon/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,44 +54,27 @@ void file_i_o()
 	#endif
 }
 
+int minScoreTriangulation(vector<int>& arr){
+int n = arr.size();
+vector<vector<ll>> dp (n,vector<ll>(n,0));
+for(int len = 2; len<=n-1; len++){
+    for(int i=1,j=len; j<n; i++,j++){
+        dp[i][j] = INT_MAX;
+        for(int k=i; k<j; k++){
+            dp[i][j] = min(dp[i][j],dp[i][k]+dp[k+1][j]+arr[i-1]*arr[k]*arr[j]);
+        }
+    }
+
+}
+return dp[1][n-1];
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

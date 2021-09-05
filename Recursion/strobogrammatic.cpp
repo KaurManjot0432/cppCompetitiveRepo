@@ -54,44 +54,35 @@ void file_i_o()
 	#endif
 }
 
+vector<string> helper(int n, int m){
+    if(n==0) return {""};
+    if(n==1) return {"0", "1", "8"};
+    vector<string> temp = helper(n-2,m);
+    vector<string> res;
+    for(string s : temp){
+        if(m!=n) res.pb("0"+s+"0");
+        res.pb("1"+s+"1");
+        res.pb("6"+s+"9");
+        res.pb("9"+s+"6");
+        res.pb("8"+s+"8");
+    }
+    return res;
+}
+
+vector<string> findStrobogrammatic(int n){
+    return helper(n,n);
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+   vector<string> res = findStrobogrammatic(3);
+   for(string &s : res) {
+       cout<<s<<endl;
+   }
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

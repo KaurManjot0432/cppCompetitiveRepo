@@ -54,45 +54,70 @@ void file_i_o()
 	#endif
 }
 
+// int dp[101][101], col[100][100];
+
+// int mixtures(vector<int> arr){
+//     int n = arr.size();
+//     memset(dp,0,sizeof(dp));
+
+//     for(int i=0; i<n; i++){
+//         col[i][i] = arr[i];
+//     }
+    
+//     for(int len = 2; len<=n; len++){
+//         for(int i=0,j=len-1; j<n; i++,j++){
+//             dp[i][j] = INT_MAX;
+//             for(int k=i; k<j; k++){
+//                 // dp[i][j] = min(dp[i][j],dp[i][k]+dp[k+1][j]+(col[i][k]*col[k+1][j]));
+//                 if(dp[i][j]>dp[i][k]+dp[k+1][j]+(col[i][k]*col[k+1][j])){
+//                     dp[i][j] = dp[i][k]+dp[k+1][j]+(col[i][k]*col[k+1][j]);
+//                     col[i][j] = (col[i][k]+col[k+1][j])%100;
+//                 }
+//             }
+//         }
+//     }
+//     // loop(i,0,n-1){
+//     //     loop(j,0,n-1){
+//     //         cout<<dp[i][j]<<" ";
+//     //     }
+//     //     cout<<endl;
+//     // }
+//     return dp[0][n-1];
+
+// }
+
+ll mixtures_BU(vi &arr, vi &pre){
+    int n = arr.size();
+    ll dp1[n][n];
+    memset(dp1,0,sizeof(dp1));
+
+    for(int len=2; len<=n; len++){
+        for(int i=0; i<=(n-len); i++){
+            int j = i+len-1;
+            dp1[i][j] = INT_MAX;
+            for(int k=i; k<j; k++){
+                int colorA = (i-1<0) ? pre[k]%100 :  (pre[k]-pre[i-1])%100;
+                int colorB = (k<0) ? pre[j]%100 : (pre[j]-pre[k])%100;
+                dp1[i][j] = min(dp1[i][j], dp1[i][k]+dp1[k+1][j]+(colorA*colorB));
+            }
+        }
+    }
+
+    return dp1[0][n-1];
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
-
+	int n;
+    cin>>n;
+    vi arr(n);
+    loop(i,0,n-1) cin>>arr[i];
+    vi pre(n);
+    pre[0] = arr[0];
+    loop(i,1,n-1) pre[i] = pre[i-1]+arr[i];
+    cout<<mixtures_BU(arr,pre)<<endl;
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

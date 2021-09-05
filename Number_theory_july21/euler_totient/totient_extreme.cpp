@@ -54,44 +54,53 @@ void file_i_o()
 	#endif
 }
 
+#define N 10005
+int phi[N];
+ll h[N];
+void gen_phi(){
+    loop(i,0,N-1) {
+        phi[i] = i;
+        h[i] = 0;
+    }
+    h[1] = 1;
+    for(int i=2; i<N; i++){
+        if(phi[i]==i){
+            //i is a prime
+            phi[i] = i-1;
+            for(int j=2*i; j<N; j+=i){
+                phi[j] = (phi[j]*(i-1))/i;
+            }
+        }
+        h[i] = h[i-1]+phi[i];
+    }
+}
+
+ll mod_exp(ll a, ll b){
+    ll ans = 1;
+    while(b){
+        if(b&1) ans = ans*a;
+        a*=a;
+        b/=2;
+    }
+    return ans;
+}
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+    gen_phi();
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        cout<<(mod_exp(h[n],2))<<endl;
+    }
+
+	
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

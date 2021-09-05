@@ -53,45 +53,45 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+vector<int> dp(2600),c(2600);
+int lengthOfLIS(vector<int>& nums) {
+    int mlen = 1;
+    c[1] = nums[0];
+    dp[0] = 1;
+    for(int i=1; i<nums.size(); i++){
+        if(nums[i]<=c[1]){
+            log(nums[i]);
+            c[1] = nums[i];
+            dp[i] = 1;
+        } else if(nums[i]>c[mlen]){
+            c[mlen+1] = nums[i];
+            dp[i] = mlen+1;
+            mlen++;
+        }else{
+            int k = lower_bound(c.begin()+1,c.begin()+mlen+1,nums[i])-c.begin();
+            log(nums[i],k);
+            c[k] = nums[i];
+            dp[i] = k;
+        }
+    }
+    loop(i,1,mlen) cout<<c[i]<<" ";
+     cout<<endl;
+    loop(i,0,nums.size()-1) cout<<dp[i]<<" ";
+    
+    cout<<endl;
+    return mlen;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	int n;
+    cin>>n;
+    vector<int> arr(n);
+    loop(i,0,n-1) cin>>arr[i];
+    log(lengthOfLIS(arr));
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

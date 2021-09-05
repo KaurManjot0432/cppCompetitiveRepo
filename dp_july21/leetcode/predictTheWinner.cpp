@@ -53,45 +53,44 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int dp[25][25];
+int maxProfitA(int i, int j,vector<int> &arr){
+    if(i==j){
+        return dp[i][j] = arr[i];
+    }
+    if(i+1==j){
+        return dp[i][j] = max(arr[i],arr[j]);
+    }
+    if(dp[i][j]!=-1) return dp[i][j];
+    int x = maxProfitA(i+2,j,arr);
+    int y = maxProfitA(i+1,j-1,arr);
+    int z = maxProfitA(i,j-2,arr);
+    return dp[i][j] = max(arr[i]+min(x,y), arr[j]+min(y,z));
+}
+bool PredictTheWinner(vector<int>& arr) {
+    int n = arr.size();
+    int t = 0;
+    for(int e : arr) t+=e;
+    // if(n==1) return true;
+    // if(n==2) return true;
+    memset(dp,-1,sizeof(dp));
+    //calculate max score player A can make
+    int maxA = maxProfitA(0,n-1,arr);
+    int maxB = t-maxA;
+    return maxA>=maxB;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+    int n;
+    cin>>n;
+    vector<int> arr(n);
+    loop(i,0,n-1){
+        cin>>arr[i];
+    }
+    cout<<PredictTheWinner(arr);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

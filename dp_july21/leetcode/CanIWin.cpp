@@ -53,45 +53,47 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+    unordered_map<int,bool> dp;
+bool helper(int curr, int desired,vector<bool> &used){
+	// log(curr);
+	auto p = used.begin()._M_p;
+	// if(dp.count(*p)){
+	// 	return dp[*p];
+	// }
+	for(int i=1; i<used.size(); i++){
+		if(not used[i]){
+		log(i);
+			used[i] = true;
+			if(curr+i>=desired){
+				used[i] = false;
+			 return true;
+			}
+			if(!helper(curr+i, desired,used)){
+				used[i] = false;
+				return true;
+			}
+			used[i] = false;
+		}
+	}
+	log(curr);
+	cout<<"returning a false\n";
+	return dp[*p] = false;
+}
+
+
+bool canIWin(int hi, int x) {
+	int sum = (hi+1)*(hi)/2;
+	if(sum<x) return false;
+	if(x<=0) return true;
+    vector<bool> used(hi+1,0);
+	return helper(0,x,used);
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	cout<<canIWin(3,4);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

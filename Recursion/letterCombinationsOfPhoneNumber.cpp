@@ -54,44 +54,35 @@ void file_i_o()
 	#endif
 }
 
+void letterCombinations(vector<string> &m, vector<string> &res, int k,string &dig, string out){
+    if(k>=dig.size()){
+        res.pb(out);
+        return;
+    }
+    int val = dig[k]-'0';
+    string s = m[val];
+    for(int i=0; i<m[val].size(); i++){
+        letterCombinations(m,res,k+1,dig,out+s[i]);
+    }
+    
+}
+
+vector<string> letterCombinations(string digits) {
+    vector<string> m {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+    vector<string> res;
+    letterCombinations(m,res,0,digits,"");
+    return res; 
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	string dig;
+    cin>>dig;
+    vector<string> res = letterCombinations(dig);
+    logarr(res,0,res.size()-1);
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

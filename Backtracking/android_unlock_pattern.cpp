@@ -54,45 +54,51 @@ void file_i_o()
 	#endif
 }
 
+int ways = 0;
+
+
+void AndroidPatterns(int len,string pat, vector<vector<int>> &via, vector<bool> &visited){
+	int n = pat.size();
+	if(len==0){
+		ways++;
+		return;
+	}
+	for(int i=1; i<=9; i++){
+		int prev = pat[n-1]-'0';
+		if(not visited[i] and visited[via[prev][i]]){
+			visited[i] = true;
+			AndroidPatterns(len-1,pat+(to_string(i)),via,visited);
+			visited[i] = false;
+		}
+	}
+}
+
+void numberOfPatterns(int m, int n){
+	vector<vector<int>> via(10,vector<int>(10,0));
+	via[1][7] = via[7][1] = 4;
+	via[7][9] = via[9][7] = 8;
+	via[9][3] = via[3][9] = 6;
+	via[1][3] = via[3][1] = 2;
+	via[1][9] = via[9][1] = via[3][7] = via[7][3] = via[2][8] = via[8][2] = via[4][6] = via[6][4] = 5;
+	vector<bool> visited(10,0);
+	visited[0] = true;
+	for(int len = m; len<=n; len++){
+		for(int i = 1; i<=9; i++){
+			visited[i] = true;
+			AndroidPatterns(len-1,to_string(i),via,visited);
+			visited[i] = false;
+		}
+	}
+}
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
-
+	
+	numberOfPatterns(1,1);
+	log(ways);
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

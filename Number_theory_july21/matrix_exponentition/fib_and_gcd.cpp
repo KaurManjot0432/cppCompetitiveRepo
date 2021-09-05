@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.hackerearth.com/problem/algorithm/fibonacci-and-gcd/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,45 +54,50 @@ void file_i_o()
 	#endif
 }
 
+ll a[100005];
+
+int k=2;
+
+vector<vector<ll>> multiply(vector<vector<ll>> &a, vector<vector<ll>> &b){
+    vector<vector<ll>> c(k,vector<ll>(k,0));
+    for(int i=0; i<k; i++){
+        for(int j=0; j<k; j++){
+            for(int x=0; x<k; x++){
+                c[i][j] = (c[i][j]+(a[i][x]*b[x][j])%mod)%mod;
+            }
+        }
+    }
+    return c;
+}
+
+void power(vector<vector<ll>> &t, ll n){
+    if(n==0 or n==1) return;
+    power(t,n/2);
+    t = multiply(t,t);
+    if(n&1){
+        vector<vector<ll>> T{{0,1},{1,1}};
+        t = multiply(t,T);
+    }
+}
+
+ll fib(ll n){
+    if(n==1 or n==2) return 1;
+    vector<vector<ll>> t{{0,1},{1,1}};
+    power(t,n-1);
+    ll f1[2] = {0,1};
+    return ((t[1][0]*f1[0])%mod + ((t[1][1]*f1[1])%mod))%mod;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
-
+	int n;
+    cin>>n;
+    loop(i,0,n-1) cin>>a[i];
+    ll g = 0;
+    loop(i,0,n-1) g = gcd(g,a[i]);
+    cout<<fib(g)<<endl;
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

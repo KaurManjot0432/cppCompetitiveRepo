@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.codechef.com/problems/NITA11
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -43,59 +43,49 @@ void err(istream_iterator<string> it, T a, Args... args) {
 //typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 //typedef trie<string,null_type,trie_string_access_traits<>,pat_trie_tag,trie_prefix_search_node_update> pbtrie;
 
-void file_i_o()
-{
-    ios_base::sync_with_stdio(0); 
-    cin.tie(0); 
-    cout.tie(0);
-	#ifndef ONLINE_JUDGE
-	    freopen("input.txt", "r", stdin);
-	    freopen("output.txt", "w", stdout);
-	#endif
+
+
+int x[] = {1,0,-1,0,1,-1,1,-1};
+int y[] = {0,1,0,-1,1,1,-1,-1};
+
+void dfs(vector<vector<char>> &a, int i, int j,int n){
+    if(i>=n || i<0 || j>=n || j<0) return;
+    if(a[i][j] == '.') return;
+    a[i][j] = '.';
+    for(int k=0; k<8; k++){
+        dfs(a,i+x[k], j+y[k],n);
+    }
 }
 
 int main(int argc, char const *argv[]) {
-	clock_t begin = clock();
-	file_i_o();
 	// Write your code here....
 	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
-
-	#ifndef ONLINE_JUDGE 
-	  clock_t end = clock();
-	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";
-	#endif 
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vector<vector<char>> a(n,vector<char>(n));
+        loop(i,0,n-1){
+            loop(j,0,n-1){
+                cin>>a[i][j];
+            }
+        }
+        bool got = false;
+        int c = 0;
+        loop(i,0,n-1){
+            loop(j,0,n-1){
+                    if(a[i][j]=='S'){
+                        dfs(a,i,j,n);
+                        c++;
+                    }
+                
+            }
+        }
+        if(c%2!=0){
+            cout<<"Alice\n";
+        } else {
+            cout<<"Bob\n";
+        }
+    }
 	return 0;
 }

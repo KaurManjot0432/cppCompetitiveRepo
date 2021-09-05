@@ -54,44 +54,44 @@ void file_i_o()
 	#endif
 }
 
+int dp[10005];
+
+bool solve(vector<int>& nums, int i){
+    if(i>=nums.size()) return false;
+    if(i==nums.size()-1) return true;
+    if(dp[i]!=-1) return dp[i];
+    bool x = false;
+    for(int k = 1; k<=nums[i]; k++){
+       x = (x or solve(nums,i+k));
+    }
+    return dp[i] = x;
+}
+
+//This solution gives us tle
+// bool canJump(vector<int>& nums) {
+    // memset(dp,-1,sizeof(dp));
+    // return solve(nums,0);   
+// }
+
+bool canJump(vector<int>& nums){
+    int n = nums.size();
+    int last = n-1;
+    for(int i=n-2; i>=0; i--){
+        if(i+nums[i]>=last) last = i;
+    }   
+    return last == 0;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+    int n;
+    cin>>n;
+    vector<int> nums(n);
+    loop(i,0,n-1) cin>>nums[i];
+    log(canJump(nums));
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

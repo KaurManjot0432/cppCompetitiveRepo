@@ -54,44 +54,32 @@ void file_i_o()
 	#endif
 }
 
+void recurse(vi &arr, int i, int j){
+    if(i==j) return;
+    if(arr[i]>arr[i+1]) swap(arr[i],arr[i+1]);
+    recurse(arr,i+1,j);
+}
+
+void bubbleSort(vi &arr, int n){
+    if(n==0) return;
+    recurse(arr,0,n);
+    loop(i,0,arr.size()-1) cout<<arr[i]<<" ";
+    cout<<endl;
+    bubbleSort(arr,n-1); 
+}
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+    int n;
+    cin>>n;
+    vi arr(n);
+    loop(i,0,n-1) cin>>arr[i];
+    bubbleSort(arr,n-1);
+    logarr(arr,0,n-1);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

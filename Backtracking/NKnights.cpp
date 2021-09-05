@@ -54,44 +54,59 @@ void file_i_o()
 	#endif
 }
 
+int ways = 0;
+
+void display(int n, vector<vector<bool>> &board){
+    for(vector<bool> row : board){
+        for(bool el : row){
+            if(el){
+                cout<<"K";
+            } else {
+                cout<<".";
+            }
+        }
+        cout<<"\n";
+    }
+    cout<<"-----------\n";
+}
+
+bool isSafe(int n, int i, int j, vector<vector<bool>> &board){
+    if(i-1>=0 and j-2>=0 and board[i-1][j-2]) return false;
+    if(i-1>=0 and j+2<n and board[i-1][j+2]) return false;
+    if(i-2>=0 and j-1>=0 and board[i-2][j-1]) return false;
+    if(i-2>=0 and j+1<n and board[i-2][j+1]) return false;
+    return true;
+}
+
+void NKnights(int sr,int sc,int placed,int n,vector<vector<bool>> &board){
+    if(placed==n){
+        ways++;
+        display(n,board);
+        return;
+    }
+
+    for(int row = sr; row<n; row++){
+        for(int col = ((row==sr)? sc : 0); col<n; col++){
+            if(not board[row][col] and isSafe(n,row,col,board)){
+                board[row][col] = true;
+                NKnights(row,col+1,placed+1,n,board);
+                board[row][col] = false;
+            }
+        }
+    }
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	int n;
+    cin>>n;
+    vector<vector<bool>> board(n,vector<bool>(n,false));
+   NKnights(0,0,0,n,board);
+   cout<<ways<<endl;
+
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

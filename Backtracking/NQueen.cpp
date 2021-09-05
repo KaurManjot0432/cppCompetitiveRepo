@@ -54,44 +54,52 @@ void file_i_o()
 	#endif
 }
 
+int cnt = 0;
+
+bool isSafe(int n, int i, int j, vector<vector<bool>> &board){
+    if(i-1<0) return true;
+    //column check
+    for(int k = i-1; k>=0; k--){
+        if(board[k][j]) return false;
+    }
+    //left diag check
+    if(j>0){
+        for(int k = i-1, l = j-1; k>=0 and l>=0; k--,l--){
+            if(board[k][l]) return false;  
+        }
+    }
+    //right diag check
+    if(j<(n-1)){
+        for(int k = i-1, l = j+1; k>=0 and l<n; k--,l++){
+            if(board[k][l]) return false;  
+        }
+    }
+    return true;
+}
+
+void cnt_ways(int n, int i,vector<vector<bool>> &board){
+    if(i==n){
+        cnt++;
+        return;
+    }
+    for(int j=0; j<n; j++){
+        if(isSafe(n,i,j,board)){
+            board[i][j] = true;
+            cnt_ways(n,i+1,board);
+            board[i][j] = false;
+        }
+    }
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	int n;
+    cin>>n;
+    vector<vector<bool>> board(n,vector<bool>(n,false));
+    cnt_ways(n,0,board);
+    log(cnt);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

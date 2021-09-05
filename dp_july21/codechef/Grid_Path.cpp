@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.codechef.com/START10B/problems/GRIDPA
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,44 +54,66 @@ void file_i_o()
 	#endif
 }
 
+#define N 155
+#define K 305
+ll dp[N][N][K];
+char grid[N][N];
+int a[N][N];
+
+void max_coin(int n, int k){
+    loop(i,0,n-1){
+        loop(j,0,n-1){
+            loop(l,0,k){
+                dp[i][j][l] = -inf;
+            }
+        }
+    }
+    dp[0][0][0] = a[0][0];
+
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+
+            if(i>0 and grid[i][j]=='.') dp[i][j][0] =  max(dp[i][j][0],dp[i-1][j][0] + a[i][j]);
+            if(j>0 and grid[i][j]=='.') dp[i][j][0] =  max(dp[i][j][0],dp[i][j-1][0] + a[i][j]);
+
+            for(int l = 1; l<=k; l++){
+                if(i>0)
+                dp[i][j][l] =  max(dp[i][j][l], dp[i-1][j][l-1] + a[i][j]);
+                if(j>0)
+                dp[i][j][l] =  max(dp[i][j][l], dp[i][j-1][l-1] + a[i][j]);
+            }
+
+            if(i>0 and grid[i][j]=='.') dp[i][j][k] = max(dp[i][j][k],dp[i-1][j][k] + a[i][j]);
+            if(j>0 and grid[i][j]=='.') dp[i][j][k] = max(dp[i][j][k],dp[i][j-1][k] + a[i][j]);
+
+        }
+    }
+    
+    cout<<max(dp[n-1][n-1][k],(ll)-1)<<endl;
+
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+    int t;
+    cin>>t;
+    while(t--){
+        int n,k;
+        cin>>n>>k;
+        loop(i,0,n-1){
+            loop(j,0,n-1){
+                cin>>grid[i][j];
+            }
+        }
+        loop(i,0,n-1){
+            loop(j,0,n-1){
+                cin>>a[i][j];
+            }
+        }
+        max_coin(n,k);
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

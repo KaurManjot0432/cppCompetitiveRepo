@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://leetcode.com/problems/distinct-subsequences/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,44 +54,36 @@ void file_i_o()
 	#endif
 }
 
+int numDistinct(string s, string t) {
+    int n = s.size();
+    int m = t.size();
+    unsigned long long dp[m][n];
+    for(int i=0; i<m; i++) dp[i][0] = 0; 
+    if(t[0]==s[0]) dp[0][0] = 1;
+    for(int j=1; j<n; j++) {
+        if(t[0]==s[j]) dp[0][j] = 1+dp[0][j-1];
+        else dp[0][j] = dp[0][j-1];
+    }
+    for(int i=1; i<m; i++){
+        for(int j=1; j<n; j++){
+            if(t[i]==s[j]){
+                dp[i][j] = dp[i-1][j-1] + dp[i][j-1];
+            } else {
+                dp[i][j] = dp[i][j-1];
+            }   
+        }
+    }
+    return dp[m-1][n-1];
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	string s,t;
+    cin>>s>>t;
+    cout<<numDistinct(s,t);
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

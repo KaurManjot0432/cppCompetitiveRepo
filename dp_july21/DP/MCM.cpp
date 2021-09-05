@@ -54,45 +54,58 @@ void file_i_o()
 	#endif
 }
 
+ll mcm(vi &arr, int i, int j){
+    if(i>=j) return 0;
+    ll ans = inf;
+    for(int k = i; k<j; k++){
+        ans = min(ans, mcm(arr,i,k)+mcm(arr,k+1,j)+arr[i-1]*arr[k]*arr[j]);
+    }
+    return ans;
+}
+ll dp[100][100];
+ll mcmdp(vi &arr, int i, int j){
+    if(i>=j) return 0;
+	if(dp[i][j]!=-1) return dp[i][j];
+    ll ans = inf;
+    for(int k = i; k<j; k++){
+        ans = min(ans, mcmdp(arr,i,k)+mcmdp(arr,k+1,j)+arr[i-1]*arr[k]*arr[j]);
+    }
+    return dp[i][j] = ans;
+}
+
+ll mcmBU(vi &arr){
+	int n = arr.size();
+	vector<vector<ll>> dp (n,vector<ll>(n,0));
+	for(int len = 2; len<=n-1; len++){
+		for(int i=1,j=len; j<n; i++,j++){
+			dp[i][j] = INT_MAX;
+			for(int k=i; k<j; k++){
+				dp[i][j] = min(dp[i][j],dp[i][k]+dp[k+1][j]+arr[i]*arr[k]*arr[j]);
+			}
+		}
+
+	}
+	loop(i,0,n-1){
+		loop(j,0,n-1){
+			cout<<dp[i][j]<<" ";
+		}
+		cout<<endl;
+	}
+	return dp[1][n-1];
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
-
+	int n;
+    cin>>n;
+    vi arr(n);
+    loop(i,0,n-1) cin>>arr[i];
+    cout<<mcm(arr,1,n-1)<<endl;
+	memset(dp,-1,sizeof(dp));
+	cout<<mcmdp(arr,1,n-1)<<endl;
+	cout<<mcmBU(arr)<<endl;
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

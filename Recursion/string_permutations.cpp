@@ -54,44 +54,23 @@ void file_i_o()
 	#endif
 }
 
+void permutations(string str, string osf){
+    if(str.size()==0){
+        cout<<osf<<endl;
+        return;
+    }
+    for(int i=0; i<str.size(); i++){
+        string a = str.substr(0,i), b = str.substr(i+1);
+        permutations(a+b,osf+str[i]);
+    }
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+    permutations("abc","");
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

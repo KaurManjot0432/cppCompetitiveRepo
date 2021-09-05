@@ -1,0 +1,4 @@
+ways = 9
+
+
+Executed In: 0.252 ms

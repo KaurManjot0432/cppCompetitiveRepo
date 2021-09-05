@@ -54,44 +54,65 @@ void file_i_o()
 	#endif
 }
 
+#define N 1000005
+
+int cnt[N];
+int chk[N];
+int mob[N];
+int freq[N];
+
+void mobius_gen(){
+    for(int i=0; i<N; i++) {
+        chk[i] = 1;
+        cnt[i] = 0;
+    }
+    for(int i=2; i<N; i++){
+        if(cnt[i]) continue;//if num is composite
+        for(int j=i; j<N; j+=i){
+            chk[j]*=i;
+            cnt[j]++;
+        }
+    }
+
+    for(int i=1; i<N; i++){
+        if(chk[i]==i){
+            if(cnt[i]&1) mob[i] = -1;
+            else mob[i] = 1;
+        } else {
+            mob[i] =  0;
+        }
+    }
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+    memset(freq,0,sizeof(freq));
+    mobius_gen();
+    int n,maxai=INT_MIN;
+    cin>>n;
+    loop(i,0,n-1){
+        int x;
+        cin>>x;
+        maxai = max(maxai,x);
+        freq[x]++;
+    }
+
+    ll ans = 0;
+    for(int i=1; i<=maxai; i++){
+        int c = 0;
+        for(int j=i; j<=maxai; j+=i){
+            c+=freq[j];
+        }
+        // log(c);
+        ll temp = (c*(c-1)*(c-2))/6;
+        ans+=(mob[i]*temp);
+    }
+    cout<<ans<<endl;
+
+	
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

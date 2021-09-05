@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -http://www.codechef.com/problems/GRID 
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,44 +54,47 @@ void file_i_o()
 	#endif
 }
 
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
 	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        char a[n][n];
+        loop(i,0,n-1){
+            loop(j,0,n-1){
+                cin>>a[i][j];
+            }
+        }
+        int row[n], col[n];
+         loop(i,0,n-1) row[i]=-1;
+       loop(i,0,n-1) col[i]=-1;
+        
+        loop(i,0,n-1){
+            loop(j,0,n-1){
+                if(a[i][j]=='#'){
+                    row[i] = j;
+                    col[j] = i;
+                }
+            }
+        }
+        int ans = 0;
+        loop(i,0,n-1){
+            loop(j,0,n-1){
+                if(a[i][j]=='.'){
+                    if(row[i]<j and col[j]<i){
+                        ans++;
+                    }
+                }
+            }
+        }
+        cout<<ans<<endl;
+    }
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.hackerrank.com/challenges/the-power-sum/problem
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,44 +54,44 @@ void file_i_o()
 	#endif
 }
 
+ll mod_exp(ll a, ll b){
+    ll ans = 1;
+    while(b){
+        if(b&1) ans = ans*a;
+        a*=a;
+        b/=2;
+    }
+    return ans;
+}
+int res = 0;
+void cnt_ways(vector<int>& v, int i, int x, int n, int curr){
+    if(curr>x) return;
+    int s = v.size();
+    if(i>=s) {
+        if(curr==x) res++;
+        return;
+    }
+    cnt_ways(v,i+1,x,n,curr);
+    int p = mod_exp(v[i],n);
+    cnt_ways(v,i+1,x,n,curr+p);
+}
+
+int powerSum(int x, int n) {
+    vector<int> v;
+    for(int i=1; i*i<=x; i++){
+        v.pb(i);
+    }
+    cnt_ways(v,0,x,n,0);
+    return res;
+}
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+	
+    log(powerSum(100,3));
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,44 +54,36 @@ void file_i_o()
 	#endif
 }
 
+// bool isPowerOfTwo(int n){
+//     while(n>1){
+//         if(n%2!=0) return false;
+//         n/=2;
+//     }
+//     return true;
+// }
+
+vector<int> countBits(int n) {
+    vector<int> dp(n+1);
+    if(n==0){
+        dp[0] = 0;
+        return dp;
+    }
+    dp[0] = 0;
+    dp[1] = 1;
+    int x=2;
+    for(int i=2; i<=n; i++){
+        if(x*2==i) x = i;
+        dp[i] = dp[i-x]+1;
+    }
+    return dp;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-	int t;
-	cin>>t;
-	while(t--){
-		int n,x;
-		cin>>n>>x;
-		ump<int,int> m;
-		int ans = 1,op=0;
-		loop(i,0,n-1){
-			int j;
-			cin>>j;
-			if(m.count(j)){
-				m[j]++;
-			} else {
-				m[j] = 1;
-			}
-			ans = max(ans,m[j]);
-		}
-		if(x!=0){
-			for(auto el : m){
-			int ai = el.ff;
-			int freq = el.ss;
-			if(m.count(ai^x)){
-				if(freq+m[ai^x]>ans){
-					ans = max(ans,freq+m[ai^x]);
-					op = min(freq,m[ai^x]);
-				} else if(freq+m[ai^x]==ans){
-					op = min(op,min(freq,m[ai^x]));
-				}
-			
-			}
-		}
-		}
-		cout<<ans<<" "<<op<<"\n";
-	}
+        
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
