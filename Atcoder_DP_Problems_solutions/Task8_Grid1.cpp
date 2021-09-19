@@ -58,7 +58,49 @@ int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n,m;
+    cin>>n>>m;
+    char grid[n][m];
+    loop(i,0,n-1){
+        loop(j,0,m-1){
+            cin>>grid[i][j];
+        }
+    }
 
+    ll dp[n][m];
+    dp[n-1][m-1]=1;
+    for(int i=m-2; i>=0; i--){
+        if(grid[n-1][i]=='.') {
+            dp[n-1][i] = dp[n-1][i+1];
+        } else {
+            dp[n-1][i] = 0;
+        }
+    }
+
+    for(int i=n-2; i>=0; i--){
+        if(grid[i][m-1]=='.') {
+            dp[i][m-1] = dp[i+1][m-1];
+        } else {
+            dp[i][m-1] = 0;
+        }
+    }
+
+    for(int i=n-2; i>=0; i--){
+        for(int j=m-2; j>=0; j--){
+            if(grid[i][j]=='.'){
+                dp[i][j] = ((dp[i+1][j]%mod)+(dp[i][j+1]%mod))%mod;
+            } else {
+                dp[i][j] = 0;
+            }
+        }
+    }
+    // loop(i,0,n-1){
+    //     loop(j,0,m-1){
+    //         cout<<dp[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    cout<<dp[0][0]<<endl;
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

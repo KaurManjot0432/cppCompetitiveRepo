@@ -53,12 +53,37 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+const int N = 105;
+const int Max = 100005;
+vi wt(N), cost(N);
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+     int n,W;
+    cin>>n>>W;
+    loop(i,0,n-1) cin>>wt[i]>>cost[i];
+    vi dp1(Max,inf);
+    vi dp2(Max,inf);
+    dp1[0] = 0;
+    dp1[cost[0]] = wt[0];
+    for(int i=1; i<n; i++){
+        for(int j=0; j<Max; j++){
+            if(cost[i]>j){
+                dp2[j] = dp1[j];
+            } else {
+                dp2[j] = min(dp1[j], dp1[j-cost[i]]+wt[i]);
+            }
+        }
+        dp2.swap(dp1);
+        std::fill(all(dp2),inf);
+    }
+    ll res = 0;
+    for(int i=0; i<Max; i++){
+        if(dp1[i]<=W) res = i;
+    }
+    cout<<res<<endl;
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

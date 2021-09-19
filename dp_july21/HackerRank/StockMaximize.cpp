@@ -54,10 +54,58 @@ void file_i_o()
 	#endif
 }
 
+// long helper(int i, int ns, int invest,vector<int> &prices ){
+//     if(i==prices.size()-1){
+//         if(ns>0) return (prices[i]*ns)-invest;
+//         else return 0;
+//     }
+//     long a = INT_MIN, b = INT_MIN, c = INT_MIN;
+//     invest+=prices[i];
+//     a = helper(i+1,ns+1,invest, prices); 
+//     invest-=prices[i];
+//     if(ns>0)
+//     b = helper(i+1, 0, 0, prices);
+//     c = helper(i+1, ns, invest, prices);
+//     return max({a,b,c})+(ns*prices[i]-invest);
+// }
+
+long stockmax(vector<int> prices) {
+    int n = prices.size();
+    long profit = 0;
+    // for(int i=0; i<n; i++){
+    //     int currMax = prices[i];
+    //     for(int j=i+1; j<n; j++){
+    //         if(prices[j]>currMax){
+    //             currMax = prices[j];
+    //         }
+    //     }
+    //     profit+=(currMax-prices[i]);
+
+    // }
+    int maxsofar = prices[n-1];
+    for(int i=n-2; i>=0; i--){
+        if(prices[i]>maxsofar){
+            maxsofar = prices[i];
+        }
+        profit+=(maxsofar-prices[i]);
+    }
+    return profit;
+}
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vector<int> prices(n);
+        loop(i,0,n-1) cin>>prices[i];
+        cout<<stockmax(prices);
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

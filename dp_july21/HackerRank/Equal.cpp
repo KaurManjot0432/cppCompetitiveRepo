@@ -59,6 +59,44 @@ int main(int argc, char const *argv[]) {
 	file_i_o();
 	// Write your code here....
 
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vi a(n);
+        ll minval=inf,maxval = -inf;
+        loop(i,0,n-1){
+            cin>>a[i];
+            minval = min(minval, a[i]);
+            maxval = max(maxval, a[i]);
+        }
+
+        //min steps to convert any number to  0
+
+        vi dp(1500+1,inf);
+        dp[0] = 0;
+        for(int i=1; i<=1500; i++){
+            dp[i] = min(dp[i], 1+dp[i-1]);
+            if(i-2>=0) dp[i] = min(dp[i], 1+dp[i-2]);
+            if(i-5>=0) dp[i] = min(dp[i], 1+dp[i-5]); 
+        }
+        // for(int i=0; i<=maxval; i++) cout<<dp[i]<<" ";
+        // cout<<endl;
+        ll ans = inf;
+        for(int i=minval-4; i<=minval; i++){
+            ll op = 0;
+            for(int j=0; j<n; j++){
+                op+=dp[a[j]-i];
+            }
+            ans = min(ans,op);
+        }
+
+        cout<<ans<<endl;
+
+
+    }
+
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

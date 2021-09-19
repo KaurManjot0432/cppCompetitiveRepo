@@ -1,15 +1,6 @@
-i = 1
-i = 2
-i = 3
-i = 3
-i = 2
-i = 1
-i = 3
-i = 3
-i = 3
-i = 1
-curr = 0
-returning a false
-0
+7 5 2 
+6 11 5 
+1 1 6 
+7
 
-Executed In: 0.246 ms
+Executed In: 0.283 ms

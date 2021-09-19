@@ -53,11 +53,32 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+const int N = 105;
+#define Max 100005
+vi arr(105);
+vector<int> dp(Max,-1);
+bool findWinner(int x, int n){
+    if(dp[x]!=-1) return dp[x];
+    loop(i,0,n-1){
+        if(arr[i]<=x and (!findWinner(x-arr[i], n))){
+          return dp[x] = true;
+        }
+    }
+    return dp[x] = false;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n,k;
+    cin>>n>>k;
+    loop(i,0,n-1) {
+        cin>>arr[i];
+    }
+
+    if(findWinner(k,n)) cout<<"First\n";
+    else cout<<"Second\n";
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

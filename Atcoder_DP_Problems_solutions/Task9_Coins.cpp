@@ -53,11 +53,28 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+const int N = 3005;
+vector<double> p(N);
+vector<vector<double>> dp(N,vector<double>(N,-1));
+double coinProb(int i, int x){
+    if(x==0) return 1;
+    if(i==0) return 0;
+
+    if(dp[i][x]>-0.9) return dp[i][x];
+
+    return dp[i][x] = ((p[i]*coinProb(i-1,x-1)) + ((1-p[i])*coinProb(i-1,x)));
+}
+
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n;
+    cin>>n;
+    loop(i,1,n) cin>>p[i];
+    cout<<fixed<<setprecision(10)<<coinProb(n,(n+1)/2)<<"\n";
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,10 +54,35 @@ void file_i_o()
 	#endif
 }
 
+const int N = 3005;
+vi arr(N);
+ll dp[N][N];
+
+ll findScore(int i, int j){
+    if(i==j) return arr[i];
+    if(i+1==j) return max(arr[i],arr[j]);
+    if(dp[i][j]!=-1) return dp[i][j];
+    ll a = findScore(i+2,j);
+    ll b = findScore(i+1,j-1);
+    ll c = findScore(i,j-2);
+    return dp[i][j] = max(arr[i]+min(a,b), arr[j]+min(b,c));
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n;
+    cin>>n;
+    ll x=0,y=0,z=0;
+    memset(dp,-1,sizeof dp);
+    loop(i,0,n-1){
+        cin>>arr[i];
+        z+=arr[i];
+    }
+    x = findScore(0,n-1);
+    y = z-x;
+    cout<<(x-y)<<endl;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

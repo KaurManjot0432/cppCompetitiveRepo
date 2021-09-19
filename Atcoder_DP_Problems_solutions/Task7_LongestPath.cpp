@@ -54,10 +54,39 @@ void file_i_o()
 	#endif
 }
 
+vector<int> graph[100005];
+int dp[100005];
+
+int longestPath(int src){
+    if(graph[src].size()==0) return 0;
+    if(dp[src]!=-1) return dp[src];
+    int max_ = 0;
+    for(int child : graph[src]){
+        max_ = max(max_,longestPath(child));
+    }
+    return dp[src] = max_+1;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n,m;
+    cin>>n>>m;
+    while(m--){
+        int src,des;
+        cin>>src>>des;
+        graph[src].pb(des);
+    }
+
+    memset(dp,-1,sizeof dp);
+    int ans = 0;
+    for(int i=1; i<=n; i++){
+        ans = max(ans,longestPath(i));
+    }
+    // loop(i,1,n) cout<<dp[i]<<" ";
+    cout<<ans<<endl;
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,6 +54,53 @@ void file_i_o()
 	#endif
 }
 
+bool isitSafe(int i, int j, int num,vector<vector<char>>& board){
+
+    //row check
+    for(int row=0; row<9; row++){
+        if(board[row][j]-'0'==num) return false;
+    }
+
+    //col check
+    for(int col=0; col<9; col++){
+        if(board[i][col]-'0'==num) return false;
+    }
+
+    //sub-box check
+    int R = i/3;
+    int C = j/3;
+    for(int row = R*3; row<(R*3)+3; row++){
+        for(int col = C*3; col<(C*3)+3; col++){
+            if(board[row][col]-'0'==num) return false;
+        }
+    }
+    return true;
+}
+
+
+bool solve(int row, int col,vector<vector<char>>& b){
+    if(row>=9) return true;
+    if(col>=9) return solve(row+1,0,b);
+    if(b[row][col]=='.'){
+
+        for(int i=1; i<=9; i++){
+            if(isitSafe(row,col,i,b)){
+                b[row][col] = '0'+i;
+                bool ans = solve(row,col+1,b);
+                if(ans) return true;
+                b[row][col] = '.';
+            }
+        }
+        return false;
+    } else {
+        return solve(row,col+1,b);
+    }
+}   
+
+void solveSudoku(vector<vector<char>>& board) {
+   solve(0,0,board);
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();

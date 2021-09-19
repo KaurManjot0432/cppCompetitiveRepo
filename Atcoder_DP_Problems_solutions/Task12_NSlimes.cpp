@@ -59,6 +59,32 @@ int main(int argc, char const *argv[]) {
 	file_i_o();
 	// Write your code here....
 
+    int n;
+    cin>>n;
+    vi arr(n), pref(n);
+    loop(i,0,n-1){
+        cin>>arr[i];
+    }
+    pref[0] = arr[0];
+    loop(i,1,n-1){
+        pref[i] = pref[i-1]+arr[i];
+    }
+
+    vector<vector<ll>> dp(n,vector<ll>(n,0));
+
+    for(int len=2; len<=n; len++){
+        for(int i=0; i<=(n-len); i++){
+            int j=i+len-1;
+            dp[i][j] = inf;
+            ll sum = (i==0)?pref[j]:pref[j]-pref[i-1];
+            for(int k=i; k<j; k++){
+                dp[i][j] = min(dp[i][j],sum+dp[i][k]+dp[k+1][j]);
+            }
+        }
+    }
+
+    cout<<dp[0][n-1]<<endl;
+
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

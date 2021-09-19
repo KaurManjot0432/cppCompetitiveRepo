@@ -53,11 +53,44 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int n;
+const int N = 10005;
+vi assist(N), capt(N);
+vector<vector<ll>> dp(N,vector<ll>(N,-1));
+
+
+ll dpTD(int i, int a){
+    if(i==n) return 0;
+    if(dp[i][a]!=-1) return dp[i][a];
+    int c = i-a;
+
+    if(a==c){
+        dp[i][a] = dpTD(i+1,a+1) + assist[i];   
+    } else if(a==(n/2)){
+        dp[i][a] = dpTD(i+1,a) + capt[i];
+    } else {
+        dp[i][a] = min( dpTD(i+1,a+1)+ assist[i],dpTD(i+1,a) + capt[i]);
+    }
+    return dp[i][a];
+
+}
+
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
+	file_i_o();
 	// Write your code here....
+
+    cin>>n;
+    for(int i=0; i<n; i++){
+        cin>>capt[i]>>assist[i];
+    }
+
+    
+    cout<<dpTD(0,0)<<"\n";
+   
+     
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -53,12 +53,48 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+vector<vector<int>> dp(200,vector<int>(2000));
+
+int getHealth(int i, int j, int row, int col,int m, int n, vector<vector<int>>& a){
+    if(row>=m or col>=n) return INT_MAX;
+    int curr = a[i][j];
+    return max(1,dp[row][col]-curr);
+}
+
+int calculateMinimumHP(vector<vector<int>>& a) {
+    int m = a.size();
+    int n = a[0].size();
+    for(int i=m-1; i>=0; i--){
+        for(int j=n-1; j>=0; j--){
+            int right = getHealth(i,j,i,j+1,m,n,a);
+            int down = getHealth(i,j,i+1,j,m,n,a);
+            dp[i][j] = min(right,down);
+            //for m-1 n-1
+            if(dp[i][j]==INT_MAX) dp[i][j] = (a[i][j]>=0? 1 : 1-a[i][j]);
+        }
+    }
+    // for(int i=0; i<m; i++){
+    //     for(int j=0; j<n; j++){
+    //         cout<<dp[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    return dp[0][0];
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    int m,n;
+    cin>>m>>n;
+    vector<vector<int>> a(m,vector<int>(n));
+    loop(i,0,m-1){
+        loop(j,0,n-1){
+            cin>>a[i][j];
+        }
+    }
+    cout<<calculateMinimumHP(a);
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";

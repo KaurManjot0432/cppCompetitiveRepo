@@ -54,10 +54,38 @@ void file_i_o()
 	#endif
 }
 
+const int N = 100;
+const int K = 100005;
+vector<int> a(N);
+ll dp[N][K];
+
+ll permutations(int i, int x, int n){
+    if(i==n-1){
+        if(a[i]<x) return 0;
+        else return 1;
+    }
+    if(dp[i][x]!=0) {
+        return dp[i][x];
+    }
+    loop(j,0,a[i]){
+        if(j<=x) dp[i][x] = ((dp[i][x]%mod)+(permutations(i+1,x-j,n)%mod))%mod;
+    }
+    return dp[i][x];
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n,k;
+    cin>>n>>k;
+    memset(dp,0,sizeof dp);
+    loop(i,0,n-1){
+        cin>>a[i];
+    }
+
+    cout<<permutations(0,k,n)<<endl;
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
