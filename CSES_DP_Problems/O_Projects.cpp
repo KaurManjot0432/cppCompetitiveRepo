@@ -54,36 +54,59 @@ void file_i_o()
 	#endif
 }
 
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
+struct triplet{
+    ll start;
+    ll end;
+    ll cost;
+    bool operator<(const triplet& obj){
+        return end < obj.end;
+    }
+};
+
+int binarySearch(vector<triplet>& a, int i){
+    int lo = 0, hi = i-1;
+    while(lo<=hi){
+        int mid = (lo+hi)/2;
+        if(a[mid].end<a[i].start){
+            if(a[mid+1].end<a[i].start){
+                lo = mid+1;
+            } else {
+                return mid;
+            }
+        } else {
+            hi = mid-1;
+        }
+    }
+    return -1;
 }
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
+    int n;
+    cin>>n;
+    vector<triplet> a(n);
+    loop(i,0,n-1) cin>>a[i].start>>a[i].end>>a[i].cost;
+    sort(a.begin(),a.end());
+    // loop(i,0,n-1){
+    //     cout<<a[i].start<<" "<<a[i].end<<" "<<a[i].cost<<endl;
+    // }
 
+    ll dp[n];
+    dp[0] = a[0].cost;
+    for(int i=1; i<n; i++){
+        //find last compatible project(whose timeing is not clasing)
+        int j = binarySearch(a,i);
+        if(j<0){
+            dp[i] = max(a[i].cost,dp[i-1]);
+        } else {
+            dp[i] = max(dp[i-1], a[i].cost+dp[j]);
+        }
+        // log(dp[i]);
+    }
+
+    cout<<dp[n-1];
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

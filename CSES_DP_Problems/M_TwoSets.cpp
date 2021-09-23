@@ -54,35 +54,29 @@ void file_i_o()
 	#endif
 }
 
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
-}
-
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
+    ll n;
+    cin>>n;
+    ll sum = (n*(n+1))/2;
+    if(sum%2!=0) {
+        cout<<0;
+        return 0;
+    }
+    sum/=2;
+    vector<vector<ll>> dp(n+1,vector<ll>(sum+1,0));
+    loop(i,1,n){
+        dp[i][0] = 1;
+    }
+    loop(i,1,n){
+        loop(j,1,sum){
+            dp[i][j] = (dp[i-1][j]%mod + ((j-i>=0)?dp[i-1][j-i]:0)%mod)%mod;
+        }
+    }
+    cout<<dp[n][sum];
+    
 
 
 	#ifndef ONLINE_JUDGE 

@@ -53,37 +53,60 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+ll dp[1005][(1<<10)];
 
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
+void generate_next_masks(int curr_mask, int i, int next_mask,int n, vector<int>& next_masks){
+    if(i==n+1){
+        next_masks.pb(next_mask);
+        return;
+    }
+
+    if((curr_mask & (1<<i))!=0){
+        generate_next_masks(curr_mask, i+1, next_mask, n, next_masks);
+    }
+
+    if(i!=n){
+        if((curr_mask & (1<<i))==0 and (curr_mask & (1<<(i+1)))==0){
+            generate_next_masks(curr_mask, i+2, next_mask, n, next_masks);
+        }
+    }
+
+    if((curr_mask & (1<<i))==0){
+        generate_next_masks(curr_mask, i+1, next_mask + (1<<i), n, next_masks);
+    }
+
+}
+
+ll solve(int n, int m, int col, int mask){
+    if(col==m+1){
+        if(mask==0){
+            return 1;
+        } 
+        return 0;
+    }
+    if(dp[col][mask]!=-1) return dp[col][mask];
+
+    vector<int> next_masks;
+    generate_next_masks(mask,1,0,n,next_masks);
+
+    ll ans = 0;
+
+    for(int next_mask : next_masks){
+        ans = (ans + solve(n,m,col+1,next_mask)%mod)%mod;
+    }
+
+    return dp[col][mask] = ans;
+
 }
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
-
+    int n,m;
+    cin>>n>>m;
+    memset(dp,-1,sizeof dp);
+    cout<<solve(n,m,1,0);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

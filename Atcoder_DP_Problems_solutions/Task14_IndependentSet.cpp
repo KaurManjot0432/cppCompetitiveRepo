@@ -53,37 +53,51 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+const int N = 100005;
+ll dp[N][2];
+vector<int> tree[N];
 
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
+ll independentSet(int node, int color, int parent){
+
+    if(dp[node][color]!=-1) return dp[node][color];
+
+    ll ans = 0;
+    ll w0 = 1;
+    for(auto child : tree[node]){
+        if(child!=parent)
+        w0 = (w0 * independentSet(child,1,node))%mod;//white
+    }
+
+    ans+=w0;
+
+    if(color==1){
+        ll w2 = 1;
+        for(auto child : tree[node]){
+            if(child!=parent)
+            w2 = (w2 * independentSet(child,0, node))%mod;//black
+        }
+        ans = (ans%mod+w2%mod)%mod;
+    }
+
+    return dp[node][color] = ans;
 }
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
 
+    int n;
+    cin>>n;
+    loop(i,0,n-2){
+        int u,v;
+        cin>>u>>v;
+        tree[u].pb(v);
+        tree[v].pb(u);
+    }
+    memset(dp,-1,sizeof dp);
+
+    cout<<(independentSet(1,1,-1));
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

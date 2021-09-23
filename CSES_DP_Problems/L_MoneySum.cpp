@@ -54,36 +54,35 @@ void file_i_o()
 	#endif
 }
 
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
-}
+set<int> res;
+
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
+    int n;
+    cin>>n;
+    int a[n];
+    loop(i,0,n-1) cin>>a[i];
+    res.emplace(a[0]);
+    loop(i,1,n-1){
+        vi temp;
+        for(auto amount : res){
+            temp.pb(amount+a[i]);
+        }
+        res.emplace(a[i]);
+        for(auto newamount : temp){
+            res.emplace(newamount);
+        }
+        
+    }
 
+    cout<<res.size()<<endl;
+    for(auto el : res){
+        cout<<el<<" ";
+    }
+    cout<<endl;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

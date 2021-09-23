@@ -53,37 +53,37 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int dp[505][505];
+int rectangleCut(int i, int j){
+    //base case
+    if(i==j) return 0;
+    if(dp[i][j]!=-1) return dp[i][j];
+    int ans = INT_MAX;
+    loop(k,1,i-1){
+        int x = rectangleCut(k,j);
+        int y = rectangleCut(i-k,j);
+        ans = min(ans,x+y);
+    }
 
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
+    loop(k,1,j-1){
+        int x = rectangleCut(i,k);
+        int y = rectangleCut(i,j-k);
+        ans = min(ans,x+y);
+    }
+
+    return dp[i][j] = (ans + 1);
+
 }
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
 
+    int a,b;
+    cin>>a>>b;
+    memset(dp,-1,sizeof dp);
+    cout<<rectangleCut(a,b)<<endl;;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

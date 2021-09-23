@@ -53,37 +53,31 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
-
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
-}
+ll dp[1000005][2];
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
 
+        dp[n+1][0] = dp[n+1][1] = 1;
+
+        for(int i=n; i>=2; i--){
+            ll op1 = (dp[i+1][0] + dp[i+1][1]) % mod;
+            ll op2 = dp[i+1][0];
+            ll op3 = (2*dp[i+1][0])%mod;
+            ll op4 = dp[i+1][1];
+            dp[i][0] = (op1+op2+op3)%mod;
+            dp[i][1] = (op1+op4)%mod;
+        }
+        cout<<(dp[2][1]+dp[2][0])%mod<<endl;
+
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

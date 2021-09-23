@@ -23,6 +23,7 @@ using namespace std;
 #define ff 				first
 #define ss 				second
 #define mid(l,r)        (l+(r-l)/2)
+#define vvi             vector<vector<ll>>
 #define bitc(n) 		__builtin_popcount(n)
 #define loop(i,a,b) 	for(int i=(a);i<=(b);i++)
 #define looprev(i,a,b) 	for(int i=(a);i>=(b);i--)
@@ -54,37 +55,42 @@ void file_i_o()
 	#endif
 }
 
-ll dp[105][100005];
-ll candies(vi &arr, ll n, ll k) {
-	loop(j, 0, k) { // base case
-		dp[1][j] = (j > arr[1]) ? 0 : 1;
-	}
-	loop(i, 2, n) {
-		loop(j, 0, k) {
-			if(j == 0) {
-				dp[i][j] = dp[i-1][j];
-			} else {
-				dp[i][j] = (mod+dp[i][j-1] + dp[i-1][j]- ((j-arr[i]-1 >= 0)?dp[i-1][j-arr[i]-1]:0))%mod;
-			}
-		}
-	}
-	return dp[n][k];
+ll dp[22][(1<<22)];
+vvi compatible(22,vector<ll>(22));
+
+ll matching(int i, ll mask, int n){
+    //base case
+    if(i==n){
+        if(mask==0) return 1;
+        else return 0;
+    }
+
+    if(dp[i][mask]!=-1) return dp[i][mask];
+
+    ll ans = 0;
+    loop(w,0,n-1){
+        bool available = (1<<w)&(mask);
+        if(available==1 and compatible[i][w]==1){
+            ans = (ans%mod + matching(i+1,mask^(1<<w),n)%mod)%mod;
+        }
+    }
+    return dp[i][mask] =  ans;
 }
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    ll n, k;
-	cin>>n>>k;
-	memset(dp, 0, sizeof(dp));
-	vi arr(n+1, 0);
-	loop(i, 1, n) {
-		cin>>arr[i];
-	}
-	cout<<candies(arr, n, k);
 
-
+    int n;
+    cin>>n;
+    loop(i,0,n-1){
+        loop(j,0,n-1){
+            cin>>compatible[i][j];
+        }
+    }
+    memset(dp,-1,sizeof dp);
+    cout<<matching(0,(1<<n)-1,n);
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
 	  cout<<"\n\nExecuted In: "<<double(end - begin) / CLOCKS_PER_SEC*1000<<" ms";
