@@ -58,7 +58,7 @@ int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    int n,m,k;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.hackerearth.com/practice/data-structures/trees/heapspriority-queues/practice-problems/algorithm/seating-arrangement-6b8562ad/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -53,11 +53,53 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+priority_queue<pair<ll,ll>> pq;
+unordered_map<ll,ll> chairs;
+void solve(ll n, ll k, string& pref){
+	pq.push(mp(n,-1));
+	for(int person = 1; person<=k; person++){
+		ll len = pq.top().first;
+		ll start = -1*pq.top().second;
+		pq.pop();
+		ll end = start+len-1;
+
+		ll pos = (start+end)/2;
+
+		if(pref[person-1]=='R' and len%2==0){
+			pos++;
+		}
+		chairs[pos] = person;
+		if(pos!=start){
+			pq.push(mp(pos-start, -1*start));
+		} 
+		if(pos!=end){
+			pq.push(mp(end-pos, -1*(pos+1)));
+		}
+
+	}
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+
+    ll n,k;
+    cin>>n>>k;
+    string pref;
+    cin>>pref;
+	solve(n,k,pref);
+    int q;
+    cin>>q;
+    while(q--){
+        ll pos;
+        cin>>pos;
+		if(chairs.count(pos)){
+			cout<<chairs[pos]<<endl;
+		} else {
+			cout<<-1<<endl;
+		}
+    }
 
 
 	#ifndef ONLINE_JUDGE 

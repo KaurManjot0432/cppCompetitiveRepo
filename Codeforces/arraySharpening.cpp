@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://codeforces.com/problemset/problem/1291/B
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -58,6 +58,37 @@ int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+	int t;
+	cin>>t;
+	while(t--){
+		ll n;
+		cin>>n;
+		vi arr(n);
+		loop(i,0,n-1) cin>>arr[i];
+		ll m1=inf,m2=inf;
+		loop(i,0,n-1){
+			if(arr[i]<i){
+				m1 = i-1;
+				break;
+			}
+		}
+		int j = 0;
+		for(int i=n-1; i>=0; i--){
+			if(arr[i]<j){
+				m2 = i+1;
+				break;
+			}
+			j++;
+		}
+		if(m1==inf or m2==inf){
+			cout<<"Yes\n";
+		}
+		else if(m1<m2){
+			cout<<"No\n";
+		} else {
+			cout<<"Yes\n";
+		}
+	}
 
 
 	#ifndef ONLINE_JUDGE 

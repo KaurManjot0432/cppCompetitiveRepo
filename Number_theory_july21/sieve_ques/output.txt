@@ -1,5 +1,10 @@
-YES
-17359 5237 11
+Yes
+2 4 8 
+NO
+NO
+NO
+Yes
+3 5 823 
 
 
-Executed In: 1368.81 ms
+Executed In: 1383.88 ms

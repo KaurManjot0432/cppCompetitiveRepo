@@ -53,6 +53,26 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int maxProduct(vector<int>& nums) {
+    int maxi = 1, mini = 1, prod = INT_MIN;
+    for(int i=0; i<nums.size(); i++){
+        if(nums[i] == 0){
+            maxi = 1;
+            mini = 1;
+            prod = max(prod, 0);
+            continue;
+        }
+        int temp = maxi;
+        maxi = max({nums[i], maxi*nums[i], mini*nums[i]});
+        mini = min({nums[i], temp*nums[i], mini*nums[i]});
+        prod = max({prod, maxi, mini});
+    }
+    if(prod==INT_MIN){
+        return 0;
+    } else {
+        return prod;
+    }
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

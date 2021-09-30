@@ -54,11 +54,43 @@ void file_i_o()
 	#endif
 }
 
+vector<int> tree[100005];
+vi worth(100005);
+vi maxi(100005,-inf);
+vi mini(100005,inf);
+ll ans = -inf;
+void maxWorth(int i){
+    if(tree[i].size()==0){
+        maxi[i] = worth[i];
+        mini[i] = worth[i];
+    }
+    for(int child : tree[i]){
+        maxWorth(child);
+        maxi[i] = max(maxi[i],maxi[child]);
+        mini[i] = min(mini[i], mini[child]);
+    }
+    maxi[i] = max(maxi[i],worth[i]);
+    mini[i] = min(mini[i],worth[i]);
+    ans = max(ans,abs(worth[i]-mini[i]));
+    ans = max(ans,abs(worth[i]-maxi[i]));
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    int n;
+    cin>>n;
+    loop(i,1,n) cin>>worth[i];
+    int root;
+    loop(i,1,n){
+        int parent;
+        cin>>parent;
+        if(parent==-1) root = i;
+        else tree[parent].pb(i);
+    }
+    maxWorth(root);
+    cout<<ans<<endl;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

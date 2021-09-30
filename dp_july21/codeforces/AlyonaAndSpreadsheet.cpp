@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://codeforces.com/problemset/problem/777/C
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,11 +54,53 @@ void file_i_o()
 	#endif
 }
 
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
 
+    int n,m;
+    cin>>n>>m;
+    int dp[n+1][m+1];
+    int arr[n+1][m+1];
+    int pre[n+1];
+    loop(i,1,n){
+        loop(j,1,m){
+            cin>>arr[i][j];
+        }
+    }
+
+    loop(i,1,m) dp[1][i] = 1;
+    pre[1] = 1;
+
+    loop(i,2,n){
+        int minn = INT_MAX;
+        loop(j,1,m){
+            if(arr[i][j]>=arr[i-1][j]){
+                dp[i][j] = dp[i-1][j];
+            } else {
+                dp[i][j] = i;
+            }
+            minn = min(minn, dp[i][j]);
+        }
+        pre[i] = minn;
+        // cout<<pre[i]<<" ";
+    }
+    // cout<<endl;
+
+    int k;
+    cin>>k;
+    while(k--){
+        int l,r;
+        cin>>l>>r;
+        if(pre[r]<=l){
+            cout<<"Yes\n";
+        } else {
+            cout<<"No\n";
+        }
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

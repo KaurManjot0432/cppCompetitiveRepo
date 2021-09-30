@@ -53,6 +53,30 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int dp[1005][105][2];
+int buySellStocks(int i, int k, bool b, vector<int>& prices){
+    if(i==prices.size()){
+        return 0;
+    }
+    if(dp[i][k][b]!=-1) return dp[i][k][b];
+    if(k>0){
+
+        if(b){
+            dp[i][k][b] = max(buySellStocks(i+1,k,b,prices), prices[i]+buySellStocks(i+1,k-1,(b==0)?1:0,prices));
+        } else {
+            dp[i][k][b] = max(buySellStocks(i+1,k,b,prices), buySellStocks(i+1,k,(b==0)?1:0, prices)-prices[i]);
+        }
+
+    } else {
+        dp[i][k][b] = buySellStocks(i+1,k,b,prices);
+    }
+    return dp[i][k][b];
+}
+
+int maxProfit(int k, vector<int>& prices) {
+    memset(dp,-1,sizeof dp);
+    return buySellStocks(0,k,0,prices);
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

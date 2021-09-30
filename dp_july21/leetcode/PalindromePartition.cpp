@@ -53,12 +53,67 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+bool dp[50][50];
+void isPalindrome(string &s){
+    int n = s.size();
+    for(int i=0; i<n; i++) dp[i][i] = true;
+
+    for(int len = 2; len<=n; len++){
+        for(int i=0; i<=(n-len); i++){
+            int j = i+len-1;
+            if(s[i]==s[j] and (j-i)==1){
+                dp[i][j] = true;
+            } else if(s[i]==s[j]){
+                dp[i][j] = dp[i+1][j-1];
+            } else {
+                dp[i][j] = false;
+            }
+        }
+    }
+
+}
+
+void backtrack(int i,string &s, vector<vector<string>> &res, vector<string>& temp){
+    if(i==s.size()){
+        res.push_back(temp);
+        return;
+    }
+
+    for(int k = i; k<s.size(); k++){
+        if(dp[i][k]){
+            // log(i,k);
+            cout<<s.substr(i,(k-i+1))<<endl;
+            temp.push_back(s.substr(i,k));
+            backtrack(k+1, s, res, temp);
+            temp.pop_back();
+        }
+    }
+
+}
+
+vector<vector<string>> partition(string s) {
+    isPalindrome(s);
+    vector<vector<string>> res;
+    vector<string> temp;
+    backtrack(0,s,res,temp);
+    return res;
+    
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    string s;
+    cin>>s;
+    cout<<s.substr(0,0);
+    vector<vector<string>> res = partition(s);
+    for(vector<string> one : res){
+        for(string str : one){
+            cout<<str<<" ";
+        }
+        cout<<endl;
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,10 +54,58 @@ void file_i_o()
 	#endif
 }
 
+ll dp[100005][5];
+ll n;
+
+ll xorCircuit(ll node, ll parent, ll x,vector<vector<ll>> &graph){
+    if(node==n){
+        return (x==0);
+    }
+    if(dp[node][x]!=-1) return dp[node][x];
+    ll ans = 0;
+    int leaf = 1;
+    for(int i=0; i<=3; i++){
+        ll v = 1;
+        for(int child : graph[node]){
+            if(child!=parent){
+                leaf = 0;
+                v = ((v%mod) * (xorCircuit(child,node,x^i,graph)%mod))%mod;
+            }
+        }
+        ans = (ans + v%mod)%mod;
+    }
+    if(leaf){
+    ll res = 0;
+        for(int i=0; i<=3; i++){
+            res = (res%mod + xorCircuit(n,node,x^i,graph));
+        }
+        return dp[node][x] = res;
+    }
+
+    return dp[node][x] = ans;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int t;
+    cin>>t;
+    while(t--){
+        memset(dp,-1,sizeof dp);   
+        cin>>n;
+        vector<vector<ll>> graph(n+1, vector<ll>(0));
+        loop(i,1,n-2){
+            ll u,v;
+            cin>>u>>v;
+            graph[u].pb(v);
+            graph[v].pb(u);
+        }
+    ll ans = xorCircuit(1,-1,0,graph);
+    cout<<(ans*4LL)%mod<<endl;
+    }
+
+
 
 
 	#ifndef ONLINE_JUDGE 

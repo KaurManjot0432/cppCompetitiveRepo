@@ -54,10 +54,41 @@ void file_i_o()
 	#endif
 }
 
+ll Kadane(ll s, ll e, vi &arr){
+    ll sum = 0, maxi = -inf;
+    for(int i=s; i<=e; i++){
+        sum+=arr[i];
+        maxi = max(maxi, sum);
+        if(sum<0){
+            sum=0;
+        }
+    }
+    return maxi;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+
+    int t;
+    cin>>t;
+    while(t--){
+        ll n;
+        cin>>n;
+        vi arr(n);
+        loop(i,0,n-1) cin>>arr[i];
+        ll yasser = 0;
+        loop(i,0,n-1) yasser+=arr[i];
+        ll a = Kadane(0,n-2,arr);
+        ll b = Kadane(1,n-1,arr);
+        ll adel = max(a,b);
+        if(yasser>adel){
+            cout<<"YES\n";
+        } else {
+            cout<<"NO\n";
+        }
+    }
 
 
 	#ifndef ONLINE_JUDGE 

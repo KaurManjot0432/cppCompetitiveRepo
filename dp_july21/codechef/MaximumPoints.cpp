@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.codechef.com/START12B/problems/MAXPOINT
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -58,7 +58,32 @@ int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int t;
+    cin>>t;
+    while(t--){
+        vi time(3), cost(3);
+        cin>>time[0]>>time[1]>>time[2];
+        cin>>cost[0]>>cost[1]>>cost[2];
 
+        ll dp[60][241];
+
+        loop(i,0,59) dp[i][0] = 0;
+        loop(i,0,240) dp[0][i] = (i>=time[0])?cost[0]:0;
+
+        loop(i,1,59){
+            loop(j,1,240){
+                if(time[i/20]<=j){
+                    dp[i][j] = max(dp[i-1][j], dp[i-1][j-time[i/20]]+cost[i/20]);
+                } else {
+                    dp[i][j] = dp[i-1][j];
+                }
+            }
+        } 
+
+        cout<<dp[59][240]<<endl;
+
+
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

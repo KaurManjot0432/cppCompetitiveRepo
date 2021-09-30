@@ -58,7 +58,30 @@ int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        string num,ans="";
+        cin>>num;
+        for(int i=0; i<num.size(); i++){
+            if(ans.size()==2) break;
+            int digit = num[i]-'0';
+            if(digit%2!=0){
+                ans.pb(num[i]);
+            }
+        }
+        if(ans.size()<2){
+            cout<<-1<<endl;
+        } else {
+            cout<<ans<<endl;
+        }
+    }
+    {
+        /* code */
+    }
+    
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://www.codechef.com/START12B/problems/TREEMIN
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,11 +54,51 @@ void file_i_o()
 	#endif
 }
 
+vector<int> tree[100005];
+vector<int> arr(100005);
+ll alice[100005], bob[100005];
+void dfs(int u, int parent){
+    ll min_ = inf;
+    ll max_ = -inf;
+    for(auto child : tree[u]){
+        if(child!=parent) {
+            dfs(child,u);
+            min_ = min(min_,arr[child] + bob[child]);
+            max_ = max(max_, arr[child]+alice[child]);
+        }
+    }
+    if(max_!=-inf){
+        alice[u] = min_;
+        bob[u] = max_;
+    }
+}
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int t;
+    cin>>t;
+    while(t--){
+        memset(alice,0,sizeof alice);
+        memset(bob, 0, sizeof bob);
+        int n,k;
+        cin>>n>>k;
+        loop(i,0,n+1){
+            tree[i].clear();
+        }
+        loop(i,1,n) cin>>arr[i];
+        loop(i,1,n-1){
+            int u,v;
+            cin>>u>>v;
+            tree[u].pb(v);
+            tree[v].pb(u);
+        }
+        dfs(1,-1);
+        cout<<alice[1]<<"\n";
 
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

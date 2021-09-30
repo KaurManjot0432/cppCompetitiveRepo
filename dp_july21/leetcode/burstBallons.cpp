@@ -53,6 +53,34 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int maxCoins(vector<int>& a) {
+    int n = a.size();
+    int nums[n+2];
+    nums[0] = 1, nums[n+1] = 1;
+    for(int i=1; i<=n; i++){
+        nums[i] = a[i-1];
+    }
+    int dp[n+2][n+2];
+    for(int i=1; i<=n; i++){
+         dp[i][i] = nums[i-1]*nums[i]*nums[i+1];
+    }
+    
+    for(int len = 2; len<=n; len++){
+        for(int i=1; i<=(n-len+1); i++){
+            int j = i+len-1;
+            dp[i][j] = dp[i+1][j] + (nums[i-1]*nums[i]*nums[j+1]);
+            for(int k=i+1; k<j; k++){
+                dp[i][j] = max(dp[i][j], dp[i][k-1] + dp[k+1][j] + (nums[i-1]*nums[k]*nums[j+1]));
+            }
+            dp[i][j] = max(dp[i][j], dp[i][j-1]+(nums[i-1]*nums[j]*nums[j+1]));
+            
+        }
+        
+    }
+  
+
+    return dp[1][n];
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

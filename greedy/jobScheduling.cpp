@@ -54,10 +54,63 @@ void file_i_o()
 	#endif
 }
 
+struct triple{
+    int start, end, gain;
+    bool operator<(const triple &obj){
+        return this->end < obj.end;
+    }
+};
+
+
+int dp[100005];
+
+int binarySearch(int lo, int hi, vector<int>& s, vector<int>& e){
+    int curr = hi+1;
+    while(lo<=hi){
+        int mid = (lo+hi)/2;
+        if(e[mid]<=s[curr]){
+            if(e[mid+1]>s[curr]){
+                return mid;
+            } else {
+                lo = mid+1;
+            }
+        } else {
+            hi = mid-1;
+        }
+    }
+    return -1;
+}
+
+
+int jobScheduling(vector<int>& s, vector<int>& e, vector<int>& p) {
+    int n = s.size();
+    memset(dp,-1,sizeof dp);
+    vector<triple> arr(n);
+    for(int i=0; i<n; i++){
+        arr[i].start = s[i];
+        arr[i].end = e[i];
+        arr[i].gain = p[i];
+    }
+    sort(arr.begin(), arr.end());
+    
+    dp[0] = p[0];
+    for(int i=1; i<n; i++){
+        int j = binarySearch(0,i-1, s,e);
+        if(j<0){
+            dp[i] = max(dp[i-1], p[i]);
+        } else {
+            dp[i] = max(dp[i-1], p[i]+dp[j]);
+        }
+        
+    }
+    return dp[n-1];
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+
 
 
 	#ifndef ONLINE_JUDGE 

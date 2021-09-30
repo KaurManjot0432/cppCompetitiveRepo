@@ -54,10 +54,45 @@ void file_i_o()
 	#endif
 }
 
+int dp[100005][2];
+int vertexCover(int node, int parent, bool included,vector<vector<int>> &graph){
+    if(dp[node][included]!=-1) return dp[node][included];
+    int ans = 0;
+    for(int child : graph[node]){
+        if(child!=parent){
+            if(included){
+                int choice1 = vertexCover(child,node, false,graph);
+                int choice2 = 1+vertexCover(child, node, true,graph);
+                ans += min(choice1, choice2);
+            } else {
+                ans += (1+vertexCover(child, node, true,graph));
+            }
+        }
+    }
+    return dp[node][included] = ans;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int t;
+    cin>>t;
+    while(t--){
+        memset(dp,-1,sizeof dp);
+        int n;
+        cin>>n;
+        vector<vector<int>> graph(n+1,vector<int>(0));
+        loop(i,1,n-1){
+            int u,v;
+            cin>>u>>v;
+            graph[u].pb(v);
+            graph[v].pb(u);
+        }
+        int ans1 = vertexCover(1,-1,false,graph);
+        int ans2 = 1+vertexCover(1,-1,true,graph);
+        cout<<(min(ans1,ans2))<<endl;
+    }
 
 
 	#ifndef ONLINE_JUDGE 

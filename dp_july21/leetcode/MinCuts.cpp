@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://leetcode.com/problems/palindrome-partitioning-ii/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,10 +54,48 @@ void file_i_o()
 	#endif
 }
 
+bool dp[2005][2005];
+void isPalindrome(string &s){
+    int n = s.size();
+    for(int i=0; i<n; i++) dp[i][i] = true;
+    for(int len=2; len<=n; len++){
+        for(int i=0; i<=(n-len); i++){
+            int j = i+len-1;
+            if(s[i]==s[j] and (j-i)==1){
+                dp[i][j] = true;
+            } else if(s[i]==s[j]){
+                dp[i][j] = dp[i+1][j-1];
+            } else {
+                dp[i][j] = false;
+            }
+        }
+    }
+}
+
+int minCut(string s) {
+    int n = s.size();
+    isPalindrome(s);
+    int cost[n];
+    for(int j=0; j<n; j++){
+        int cuts = j;//maximum cuts possible
+        for(int i=0; i<=j; i++){
+            if(dp[i][j]){
+                // log(i,j);
+                cuts = min(cuts, (i==0)?0 : 1+cost[i-1]);
+            }
+        }
+        cost[j] = cuts;
+    }
+    return cost[n-1];
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    string s;
+    cin>>s;
+    cout<<minCut(s);
 
 
 	#ifndef ONLINE_JUDGE 

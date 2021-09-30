@@ -54,10 +54,56 @@ void file_i_o()
 	#endif
 }
 
+int n,m;
+char arr[105][105];
+
+int dx1[] = {1,1,0,0};
+int dx2[] = {1,0,1,0};
+int dy1[] = {0,0,1,1};
+int dy2[] = {0,1,0,1};
+
+ll dp[105][105][105];
+
+ll tour(int x1,int y1, int x2,int y2){
+    if(x1>=n or x2>=n or y1>=m or y2>=m or arr[x1][y1]=='#' or arr[x2][y2]=='#'){
+        return -inf;
+    }
+
+    if(x1==n-1 and y1==m-1){
+        return (arr[x1][y1]=='*');
+    }
+
+    if(dp[x1][y1][x2]!=-1) return dp[x1][y1][x2];
+
+    ll ans = -inf;
+    for(int i=0; i<4; i++){
+        ans = max(ans, tour(x1+dx1[i],y1+dy1[i],x2+dx2[i], y2+dy2[i]));
+    }
+
+    ans+=(arr[x1][y1]=='*');
+    ans+=(arr[x2][y2]=='*');
+    if(x1==x2 and y1==y2 and arr[x1][y1]=='*')
+        ans-=1;
+    return dp[x1][y1][x2] = ans;
+}
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int t;
+    cin>>t;
+    while(t--){
+        memset(dp,-1,sizeof dp);
+        cin>>m>>n;
+        loop(i,0,n-1){
+            loop(j,0,m-1){
+                cin>>arr[i][j];
+            }
+        }
+
+        cout<<tour(0,0,0,0)<<endl;
+    }
 
 
 	#ifndef ONLINE_JUDGE 

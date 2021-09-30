@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://leetcode.com/problems/find-original-array-from-doubled-array/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -53,6 +53,32 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+vector<int> findOriginalArray(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> orig;
+    sort(arr.begin(), arr.end());
+    vector<int> check(100005,0);
+    for(int i=0; i<n; i++){
+        check[arr[i]]++;
+    }
+    for(int i=0; i<n; i++){
+        if(check[arr[i]]==0) continue;
+        if(check[arr[i]*2]==0){
+            orig.clear();
+            break;
+        } else {
+            orig.push_back(arr[i]);
+            check[arr[i]*2]--;
+            check[arr[i]]--;
+            if(check[arr[i]]<0) {
+                orig.clear();
+                break;
+            }
+        }
+    }
+    return orig;
+}
+
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

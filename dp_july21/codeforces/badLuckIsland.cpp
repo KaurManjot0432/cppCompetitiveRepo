@@ -54,11 +54,63 @@ void file_i_o()
 	#endif
 }
 
+ld dp[105][105][105];
+
+ld fr(int r, int s, int p){
+    if(r==0 or s==0) return 0.0;
+    if(p==0) return 1.0;
+    if(dp[r][s][p]>0.9){
+        return dp[r][s][p];
+    }
+    ld total = r*s + s*p + p*r;
+    ld res = 0.0;
+    res += fr(r-1,s,p) * ((r*p)/total) ;
+    res += fr(r,s-1,p) * ((s*r)/total) ;
+    res += fr(r,s,p-1) * ((p*s)/total) ;
+    return dp[r][s][p] = res;
+}
+
+ld fs(int r, int s, int p){
+    if(p==0 or s==0) return 0.0;
+    if(r==0) return 1.0;
+    if(dp[r][s][p]>0.9){
+        return dp[r][s][p];
+    }
+    ld total = r*s + s*p + p*r;
+    ld res = 0.0;
+    res += fs(r-1,s,p) * ((r*p)/total) ;
+    res += fs(r,s-1,p) * ((s*r)/total) ;
+    res += fs(r,s,p-1) * ((p*s)/total) ;
+    return dp[r][s][p] = res;
+}
+ld fp(int r, int s, int p){
+    if(r==0 or p==0) return 0.0;
+    if(s==0) return 1.0;
+    if(dp[r][s][p]>0.9){
+        return dp[r][s][p];
+    }
+    ld total = r*s + s*p + p*r;
+    ld res = 0.0;
+    res += fp(r-1,s,p) * ((r*p)/total) ;
+    res += fp(r,s-1,p) * ((s*r)/total) ;
+    res += fp(r,s,p-1) * ((p*s)/total) ;
+    return dp[r][s][p] = res;
+}
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
 
+    int r,s,p;
+    cin>>r>>s>>p;
+    memset(dp,-1.0, sizeof dp);
+    ld ans_r = fr(r,s,p);
+     memset(dp,-1.0, sizeof dp);
+    ld ans_s = fs(r,s,p);
+      memset(dp,-1.0, sizeof dp);
+    ld ans_p = fp(r,s,p);
+
+    cout<<fixed<<setprecision(9)<<ans_r<<" "<<ans_s<<" "<<ans_p<<endl;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
