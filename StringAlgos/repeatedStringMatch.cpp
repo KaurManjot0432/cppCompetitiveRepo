@@ -53,8 +53,20 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
-
-
+int repeatedStringMatch(string a, string b) {
+    int aLen = a.size();
+    int bLen = b.size();
+    int cnt = 0;
+    int i=0;
+    while(i<aLen and a[i]!=b[0]) i++;
+    if(i==aLen) return -1;
+    for(int j=0; j<bLen; j++){
+        if(a[i]!=b[j]) return -1;
+        if(i==(aLen-1) or j==(bLen-1)) cnt++;
+        i = (i+1)%aLen;
+    }        
+    return cnt;
+}
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();

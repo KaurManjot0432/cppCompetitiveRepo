@@ -54,12 +54,35 @@ void file_i_o()
 	#endif
 }
 
+int lps[1000006];
+int kmp(string pat, string text){
+    int patLen = pat.size(),cnt = 0;
+    pat.pb('$');
+    pat+=text;
+    int len = 0, j=1;
+    while(j<pat.size()){
+        if(pat[len]==pat[j]){
+            lps[j] = len+1;
+            if(lps[j]==patLen) cnt++;
+            j++;len++;
+        } else {
+            if(len==0){
+                lps[j] = 0;
+                j++;
+            } 
+            else len = lps[len-1];
+        }
+    }
+    return cnt;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    string pat, text;
+    cin>>pat>>text;
+    cout<<kmp(pat,text)<<endl;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,6 +54,24 @@ void file_i_o()
 	#endif
 }
 
+int mincostTickets(vector<int>& days, vector<int>& costs) {
+    int n = days.size();
+    vector<int> dp(366,0);
+    dp[0] = 0;
+     for(int i=0; i<n; i++) {
+         dp[days[i]]++;
+     }
+    for(int i=1; i<=days[n-1]; i++){
+        if(dp[i]==1){
+        dp[i] = dp[i-1] + costs[0];
+        dp[i] = min(dp[i] , costs[1]+((i-7>=0)?dp[i-7]:0));
+        dp[i] = min(dp[i] , costs[2]+((i-30>=0)?dp[i-30]:0));
+        } else {
+            dp[i] = dp[i-1];
+        }
+    }
+    return dp[days[n-1]];
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

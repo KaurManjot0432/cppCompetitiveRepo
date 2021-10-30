@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://codeforces.com/problemset/problem/126/B?mobile=true
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -53,13 +53,53 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int lps[1000005];
+void findlps(string s){
+    int len = 0, j=1;
+    while(j<s.size()){
+        if(s[len]==s[j]){
+            lps[j] = len+1;
+            j++;len++;
+        } else {
+            if(len==0){
+                lps[j] = 0;
+                j++;
+            } 
+            else len = lps[len-1];
+        }
+    }
+}
 
+void solve(string s){
+    int n = s.size();
+    findlps(s);
+    int got = 0;
+    if(lps[lps[n-1]-1]!=0){
+        got = lps[lps[n-1]-1];
+    }
+    for(int i=0; i<n-1; i++){
+        if(lps[i]==lps[n-1]){
+            got = lps[n-1];
+        }
+    }
+    if(not got){
+            cout<<"Just a legend\n";
+    } else {
+        string ans;
+        for(int i=0; i<got; i++){
+           ans.pb(s[i]);
+        }
+        cout<<ans<<endl;
+    }
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    string s;
+    cin>>s;
+    solve(s);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

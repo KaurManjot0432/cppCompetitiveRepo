@@ -53,6 +53,27 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int longestValidParentheses(string s) {
+    int n = s.size();
+    vector<int> dp(n+1,0);
+    for(int i=0; i<n; i++){
+        if(s[i]==')' and i>0){
+            if(s[i-1]=='('){
+                dp[i] = ((i-2>=0)?dp[i-2] : 0) + 2;
+            }else if(s[i-1]==')'){
+                int x = dp[i-1];
+                if((i-x-1)>=0 and s[i-x-1]=='('){
+                    dp[i] = x + 2 + (((i-x-2)>=0)?dp[i-x-2]: 0 );
+                }
+            }
+        }
+    }
+    int ans = 0;
+    for(int i=0; i<n; i++){
+        ans = max(ans, dp[i]);
+    }
+    return ans;
+}
 
 
 int main(int argc, char const *argv[]) {

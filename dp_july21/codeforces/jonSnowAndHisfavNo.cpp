@@ -54,11 +54,46 @@ void file_i_o()
 	#endif
 }
 
-
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n,k,x;
+    cin>>n>>k>>x;
+    vector<int> arr(n);
+    vector<int> freq(1501, 0);
+    loop(i,0,n-1){
+        int e;
+        cin>>e;
+        freq[e]++;
+    }
+    while(k--){
+        int parity = 1;
+        vector<int> temp(freq);
+        for(int i=0; i<=1500; i++){
+            if(freq[i]>0){
+                int y = i^x;
+                int change = freq[i]/2;
+                if(parity and freq[i]%2!=0){
+                    change+=1;
+                }
+                temp[i] -= change;
+                temp[y] += change;
+                parity = parity ^ (freq[i]%2!=0) ; 
+            }
+        }
+        freq = temp;
+    }
+    int mi = INT_MAX, ma = INT_MIN;
+    for(int i=0; i<=1500; i++){
+        if(freq[i]>0){
+            mi = min(mi,i);
+            ma = max(ma,i);
+        }
+    }
+    cout<<ma<<" "<<mi<<endl;
+
+
 
 
 	#ifndef ONLINE_JUDGE 

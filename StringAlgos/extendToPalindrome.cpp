@@ -54,11 +54,47 @@ void file_i_o()
 	#endif
 }
 
+int lps[10000005];
+void findLps(string s){
+    int len = 0, j=1;
+    while(j<s.size()){
+        if(s[len]==s[j]){
+            lps[j] = len+1;
+            j++;len++;
+        } else {
+            if(len==0){
+                lps[j] = 0;
+                j++;
+            } 
+            else len = lps[len-1];
+        }
+    }
+}
+
+void solve(string s){
+    string t = s;
+    reverse(t.begin(), t.end());
+    findLps(t+s);
+    int n = s.size();
+    n*=2;
+    int cnt = n-lps[n-1];
+    n/=2;
+    int i = cnt-n-1;
+    while(i>=0){
+        s.pb(s[i--]);
+    }
+    cout<<s<<endl;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+char str[100005];
+	while(scanf("%s", str) != EOF){
+		string s = str;
+		solve(s);
+	}
 
 
 	#ifndef ONLINE_JUDGE 

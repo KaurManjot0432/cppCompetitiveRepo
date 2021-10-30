@@ -53,7 +53,62 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+//this ques is variation of TSP
 
+string dfs(int mask, int curr, vector<string> &A,vector<vector<string>> &dp,vector<vector<int>> &overlap){
+    if(!dp[mask][curr].empty()){
+        return dp[mask][curr];
+    }
+    int pre=mask^(1<<curr);
+    if(pre==0){
+        return dp[mask][curr]=A[curr];
+    }
+
+    for(int i=0; i<A.size(); i++){
+        if(pre & (1<<i)!=0){
+            string temp = dfs(pre, i, A, dp, overlap) + A[curr].substr(overlap[i][curr]);
+            if(dp[mask][curr].empty() or temp.size()<dp[mask][curr].size()){
+                dp[mask][curr] = temp;
+            }
+        }
+    }
+    return dp[mask][curr];
+}
+
+string shortestSuperstring(vector<string>& A) {
+    int n = A.size();
+    vector<vector<string>> dp((1<<n), vector<string>(n));
+    vector<vector<int>> overlap(n,vector<int>(n,0));
+
+    //find overlap of two strigs i,j
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            if(i!=j){
+                string a = A[i];
+                string b = A[j];
+                for(int k=min(a.size(), b.size()); k>=0; k--){
+                    if(a.substr(a.size()-k) == b.substr(0,k)){
+                        overlap[i][j] = k;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    for(int i=0; i<n; i++){
+        dfs((1<<n)-1, i, A, dp, overlap);
+    }
+    int all = (1<<n)-1;
+    string ans = dp[all][0];
+    for(int i=1; i<n; i++){
+        if(dp[all][i].size()<ans.size()){
+            ans = dp[all][i];
+        }
+    }
+    return ans;
+
+
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

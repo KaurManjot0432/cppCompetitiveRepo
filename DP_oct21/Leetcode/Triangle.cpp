@@ -53,7 +53,23 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int dp[205][205];
+int solve(int i, int j, int n,vector<vector<int>>& triangle){
+    if(i>=n) return 0;
+    if(j<0 or j>=triangle[i].size()) {
+        return INT_MAX;
+    }
+    if(dp[i][j]!=-1) return dp[i][j];
+    int ans = INT_MAX;
+    ans = min(ans, solve(i+1,j,n,triangle));
+    ans = min(ans, solve(i+1,j+1,n,triangle));
+    return dp[i][j] = ans+triangle[i][j];
+}
 
+int minimumTotal(vector<vector<int>>& triangle) {
+    memset(dp,-1,sizeof dp);
+    return solve(0,0,triangle.size(),triangle);
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

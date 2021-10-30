@@ -53,12 +53,31 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
-
+int lps[100005];
+void findlps(string s){
+    int len = 0, j=1;
+    while(j<s.size()){
+        if(s[len]==s[j]){
+            lps[j] = len+1;
+            j++;len++;
+        } else {
+            if(len==0){
+                lps[j] = 0;
+                j++;
+            } 
+            else len = lps[len-1];
+        }
+    }
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    string s;
+    cin>>s;
+    findlps(s);
+    loop(i,0,s.size()-1) cout<<lps[i]<<" ";
 
 
 	#ifndef ONLINE_JUDGE 

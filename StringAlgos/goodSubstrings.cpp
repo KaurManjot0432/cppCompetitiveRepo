@@ -54,12 +54,35 @@ void file_i_o()
 	#endif
 }
 
+int countDistinctSubstring(string str, string check, int k)
+{
+    //Your code here
+    int n = str.size();
+    set<pair<int,int>> st;
+    for(int i=0; i<n; i++){
+        int p1 = 1,p2 = 1, hashval1 =  0,hashval2 = 0,cnt = 0;
+        for(int j=i; j<n; j++){
+            if(check[str[j]-'a']=='0') cnt++;
+            if(cnt>k) break;
+            hashval1 = (hashval1 + ((str[j]-'a'+1)*p1)%mod)%mod;
+            hashval2 = (hashval2 + ((str[j]-'a'+1)*p2)%mod)%mod;
+            p1 = (p1*31)%mod;
+            p2 = (p2*37)%mod;
+            st.insert({hashval1,hashval2});
+        }
+    }
+    return st.size();
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    string s, check;
+    cin>>s>>check;
+    int k;
+    cin>>k;
+    cout<<countDistinctSubstring(s,check, k)<<endl;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,6 +54,40 @@ void file_i_o()
 	#endif
 }
 
+int minFallingPathSum(vector<vector<int>>& grid) {
+    int n = grid.size();
+    vector<vector<ll>> dp(n,vector<ll>(n));
+    ll mini = inf,id=-1;
+    for(int i=0; i<n; i++) {
+        dp[0][i] = grid[0][i];
+        if(mini<dp[0][i]){
+            mini = dp[0][i];
+            id = i;
+        }
+    }
+    for(int i=1; i<n; i++){
+        ll temp = inf, tempid = -1;
+        for(int j=0; j<n; j++){
+           if(id!=j) dp[i][j] = mini + grid[i][j];
+           else {
+               ll mi = inf;
+               for(int k=0; k<n; k++){
+                   if(k!=id) mi = min(mi, dp[i-1][k]);
+               }
+               dp[i][j] = mi + grid[i][j];
+           }
+            if(temp<dp[i][j]){
+                temp = dp[i][j];
+                tempid = j;
+            }
+        }
+        mini = temp;
+        id = tempid;
+    }
+    ll ans = dp[n-1][0];
+    for(int i=1; i<n; i++) ans = min(ans, dp[n-1][i]);
+    return ans;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

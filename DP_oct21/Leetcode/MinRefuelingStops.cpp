@@ -54,6 +54,27 @@ void file_i_o()
 	#endif
 }
 
+int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {
+	int n = stations.size();
+	vector<vector<ll>> dp(n+1, vector<ll>(n+1,0));
+	for(int i=0; i<=n; i++) dp[i][0] = startFuel;
+
+	for(int i=1; i<=n; i++){
+		for(int j=1; j<=i; j++){
+			//if i do not refuel
+			dp[i][j] = dp[i-1][j];
+			//if i refuel, first i should check whether i can reach to this station or not
+			if(dp[i-1][j-1]>=(ll)stations[i-1][0]){
+				dp[i][j] = max(dp[i][j], dp[i-1][j-1] + (ll)stations[i-1][1]);
+			}
+		}
+	}
+	for(int j=0; j<=n; j++){
+		if(dp[n][j]>=(ll)target) return j;
+	}
+	return -1;
+
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

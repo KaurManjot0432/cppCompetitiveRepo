@@ -54,12 +54,31 @@ void file_i_o()
 	#endif
 }
 
+int dirx[] = {2,2,1,1,-1,-1,-2,-2};
+int diry[] = {-1,1,-2,2,-2,2,-1,1};
+
+double dp[105][30][30];
+
+double knightprob(int n, int k, int i, int j) {
+    if(i<0 or i>=n or j<0 or j>=n){
+        return 0;
+    }
+    if(k==0) return 1;
+    if(dp[k][i][j]>-0.9) return dp[k][i][j];
+    double ans = 0.0;
+    
+    for(int d=0; d<8; d++){
+        ans += (knightprob(n,k-1,i+dirx[d], j+diry[d])) * (1.0/8.0);
+    }
+    return dp[k][i][j] = ans;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    memset(dp,-1.0,sizeof dp);
+    cout<<fixed<<setprecision(5)<<knightprob(1,0,0,0);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,11 +54,36 @@ void file_i_o()
 	#endif
 }
 
+int n,m;
+string s,t;
+ll dp[1005][1005][12][2];
+ll solve(int i, int j, int k, bool c){
+	if(i>=n or j>=m){
+		return (k==0)?0:INT_MIN;
+	}
+	if(k==0) return 0;
+	if(dp[i][j][k][c]!=-1) return dp[i][j][k][c];
+	ll ans = INT_MIN;
+	ans = max(ans,solve(i+1,j,k-c,false));
+	ans = max(ans,solve(i,j+1,k-c,false));
+	if(s[i]==t[j]){
+		ans = max(ans, 1+solve(i+1,j+1,k-1,false)); 
+		ans = max(ans, 1+solve(i+1,j+1,k,true));
+	}
+	return dp[i][j][k][c] = ans;
+}
+
+
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-    int n,m,k;
+	int K;
+	cin>>n>>m>>K;
+	cin>>s>>t;
+	memset(dp,-1,sizeof dp);
+	cout<<solve(0,0,K,false)<<endl;
+
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

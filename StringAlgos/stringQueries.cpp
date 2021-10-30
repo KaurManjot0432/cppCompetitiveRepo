@@ -54,11 +54,52 @@ void file_i_o()
 	#endif
 }
 
-
+ll inversemod(ll a, ll b){
+    ll ans = 1;
+    while(b){
+        if(b&1)
+            ans = (ans*a)%mod;
+        a = ((a%mod)*(a%mod)%mod);
+        b>>=1;
+    }
+    return ans%mod;
+}
+int hashval[100005];
+int pw[100005];
+void precompute(string s){
+    int p = 1, hash = 0;
+    for(int i=0; i<s.size(); i++){
+        hashval[i] = (hash + ((s[i]-'a'+1)*p)%mod)%mod;
+        pw[i] = inversemod(p,mod-2);
+        p*=31;
+    }
+}
+int computeHash(int l, int r) {
+	int hash = hashval[r]; 
+	if(l > 0) hash = (hash - hashval[l-1] + mod) % mod; 
+ 
+	hash = (hash * pw[l]); 
+	return hash; 
+}
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    string s;
+    cin>>s;
+    int q;
+    cin>>q;
+    while(q--){
+        int l1,r1,l2,r2;
+        cin>>l1>>r1>>l2>>r2;
+        int hash1 = computeHash(l1,r1);
+        int hash2 = computeHash(l2,r2);
+        if(hash1==hash2){
+            cout<<"Yes\n";
+        } else {
+            cout<<"No\n";
+        }
+    }
 
 
 	#ifndef ONLINE_JUDGE 

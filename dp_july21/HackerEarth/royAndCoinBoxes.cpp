@@ -54,12 +54,44 @@ void file_i_o()
 	#endif
 }
 
-
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int n;
+    cin>>n;
+    vi arr(1000005,0);
+    int m;
+    cin>>m;
+    while(m--){
+        int l, r;
+        cin>>l>>r;
+        arr[l-1] = arr[l-1] - 1;
+        arr[r] = arr[r] + 1;
+    }
+   
+    ll ma = 0;
+    for(int i=n-1; i>=0; i--){
+        arr[i] = arr[i] + arr[i+1];
+        ma = max(ma,arr[i]);
+    }
 
+    unordered_map<ll,ll> freq;
+    for(int j=1; j<=n; j++){
+        freq[arr[j]]++;
+    }
+
+    for(int i = ma-1; i>=0; i--){
+        freq[i] = freq[i+1] + freq[i];
+    }
+    
+    int q;
+    cin>>q;
+    while(q--){
+        ll x;
+        cin>>x;
+        cout<<freq[x]<<endl;
+    }
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -54,11 +54,37 @@ void file_i_o()
 	#endif
 }
 
+int blackbox(string s){
+    int p = 1,hashval = 0;
+    for(int i=0; i<s.size(); i++){
+        hashval = (hashval + ((s[i]-'a'+1)*p)%mod)%mod;
+        p*=31;
+    }
+    return hashval;
+}
+
+int countDistinctSubstring(string str)
+{
+    //Your code here
+    int n = str.size();
+    unordered_set<int> st;
+    for(int i=0; i<n; i++){
+        ll p = 1, hashval =  0;
+        for(int j=i; j<n; j++){
+            hashval = (hashval + ((str[i]-'a'+1)*p)%mod)%mod;
+            p = ((p%mod)*31)%mod;
+            st.insert(hashval);
+        }
+    }
+    return st.size()+1;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    //ques=>calculate no. of unique substrings in a string
+
 
 
 	#ifndef ONLINE_JUDGE 

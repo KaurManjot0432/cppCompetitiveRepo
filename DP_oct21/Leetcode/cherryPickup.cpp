@@ -54,6 +54,42 @@ void file_i_o()
 	#endif
 }
 
+    int dirx1[] = {1,1,0,0};
+    int diry1[] = {0,0,1,1};
+    int dirx2[] = {0,1,0,1};
+    int diry2[] = {1,0,1,0};
+    int dp[52][52][52];
+    int solve(int x1,int y1, int x2, int y2, int n,vector<vector<int>>& grid){
+        if(x1>=n or x2>=n or y1>=n or y2>=n or grid[x1][y1]==-1 or grid[x2][y2]==-1){
+            return INT_MIN;
+        }
+        if(x1==n-1 and y1==n-1){
+            return grid[n-1][n-1];
+        }
+        if(x2==n-1 and y2==n-1){
+            return grid[n-1][n-1];
+        }
+        if(dp[x1][y1][x2]!=-1) return dp[x1][y1][x2];
+        
+        int ans ;
+        ans = grid[x1][y1] + grid[x2][y2];
+        if(x1==x2 and y1==y2 and grid[x1][y1]==1) ans-=1;
+        
+        ans += max(
+             max(solve(x1+1,y1,x2+1,y2,n,grid), solve(x1+1,y1,x2,y2+1,n,grid)),
+             max(solve(x1,y1+1,x2,y2+1,n,grid),solve(x1,y1+1,x2+1,y2,n,grid))
+        );
+
+      
+        return dp[x1][y1][x2] = ans;
+    }
+
+
+    int cherryPickup(vector<vector<int>>& grid) {
+            memset(dp,-1,sizeof dp);
+            return solve(0,0,0,0,grid.size(),grid);
+    }
+
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

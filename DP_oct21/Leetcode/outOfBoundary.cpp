@@ -1,4 +1,4 @@
-// Problem Link -
+// Problem Link -https://leetcode.com/problems/out-of-boundary-paths/
 /*By Manjot Kaur*/
 #include<bits/stdc++.h>
 //#include<ext/pb_ds/assoc_container.hpp>
@@ -54,11 +54,28 @@ void file_i_o()
 	#endif
 }
 
+int dp[52][52][52];
+int findPaths(int m, int n, int k, int i, int j) {
+    if(i<0 or i>=m or j<0 or j>=n) {
+        // log(i,j);
+        return 1;
+    }
+    if(k==0) return 0;
+    if(dp[k][i][j]!=-1) return dp[k][i][j];
+    int ans = 0;
+    ans = (ans + findPaths(m,n,k-1,i+1,j)%mod)%mod;
+    ans = (ans + findPaths(m,n,k-1,i-1,j)%mod)%mod;
+    ans = (ans + findPaths(m,n,k-1,i,j+1)%mod)%mod;
+    ans = (ans + findPaths(m,n,k-1,i,j-1)%mod)%mod;
+    return dp[k][i][j] = ans;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    memset(dp,-1,sizeof dp);
+    cout<<findPaths(1,3,3,0,1);
 
 
 	#ifndef ONLINE_JUDGE 

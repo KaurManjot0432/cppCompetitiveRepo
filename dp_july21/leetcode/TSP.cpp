@@ -53,13 +53,41 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int dp[(1<<15)][15];
+int TSP(vector<vector<int>>cost, int mask, int i, int n){
+    if(mask==(1<<n)-1){
+        return cost[i][0];
+    }
+    if(dp[mask][i]!=-1) return dp[mask][i];
+    int ans = INT_MAX;
+    for(int city=0; city<n; city++){
+        bool visited = (mask) & (1<<city);
+        if(not visited){
+            ans = min(ans, cost[i][city]+TSP(cost, mask^(1<<city), city, n));
+        }
+    }
+    return dp[mask][i] = ans;
+}
 
+int total_cost(vector<vector<int>>cost){
+    int n = cost.size();
+    memset(dp,-1,sizeof dp);
+    return TSP(cost,1, 0, n);
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    int n;
+    cin>>n;
+    vector<vector<int>> cost(n,vector<int>(n));
+    loop(i,0,n-1){
+        loop(j,0,n-1){
+            cin>>cost[i][j];
+        }
+    }
+    cout<<total_cost(cost);
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();
@@ -67,3 +95,4 @@ int main(int argc, char const *argv[]) {
 	#endif 
 	return 0;
 }
+

@@ -54,11 +54,58 @@ void file_i_o()
 	#endif
 }
 
+ll arr[10000005];
+
+ll merge(int s, int m, int e){
+    vector<ll> temp;
+    ll cnt = 0;
+    int i=s, j = m+1;
+    while(i<=m and j<=e){
+        if(arr[i]<=arr[j]){
+            temp.pb(arr[i++]);
+        } else {
+            cnt+=(m-i+1);
+            temp.pb(arr[j++]);
+        }
+    }
+    while(i<=m){
+        temp.pb(arr[i++]);
+    }
+    while(j<=e){
+        temp.pb(arr[j++]);
+    }
+    int l=0;
+    for(int k=s; k<=e; k++){
+        arr[k] = temp[l++]; 
+    }
+    return cnt;
+}
+ll res = 0;
+void mergeSort(int s, int e){
+    if(s==e) return;
+    int mid = (s+e)/2;
+    mergeSort(s,mid);
+    mergeSort(mid+1,e);
+    res+=merge(s,mid,e);
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        loop(i,0,n-1) {
+            cin>>arr[i];
+        }
+        res = 0;
+        mergeSort(0,n-1);
+        cout<<res<<endl;
+       
+    }
 
 
 	#ifndef ONLINE_JUDGE 

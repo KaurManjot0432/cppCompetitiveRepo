@@ -54,6 +54,22 @@ void file_i_o()
 	#endif
 }
 
+int numberOfArithmeticSlices(vector<int>& nums) {
+    int n = nums.size();
+    if(n==1) return 0;
+    vector<unordered_map<int,int>> dp(n);
+    dp[1][nums[1]-nums[0]] = 1;
+    int ans = 0;
+    for(int i=2; i<n; i++){
+        for(int j=i-1; j>=0; j--){
+            int d = nums[i] - nums[j];
+            dp[i][d] = dp[j][d] + 1;
+            ans+=dp[j][d];
+        }
+    }
+   
+    return ans;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

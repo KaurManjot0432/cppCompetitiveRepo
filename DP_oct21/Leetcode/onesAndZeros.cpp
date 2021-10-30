@@ -53,7 +53,40 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+ int solve(int i, int m, int n,vector<int>& ones, vector<int>& zeros){
+    if(i==ones.size()){
+        return 0;
+    }
+    
+    if(dp[i][m][n]!=-1) return dp[i][m][n];
+    int ans = INT_MIN;
+    ans = max(ans, solve(i+1,m,n,ones,zeros));
 
+    if(zeros[i]<=m and ones[i]<=n){
+        ans = max(ans, 1+solve(i+1, m-zeros[i], n-ones[i],ones,zeros));
+    }
+     // cout<<ans<<endl;
+    return dp[i][m][n] = ans;
+}
+int dp[601][101][101];
+int findMaxForm(vector<string>& strs, int m, int n) {
+    memset(dp,-1, sizeof dp);
+    int s = strs.size();
+    vector<int> ones(s,0), zeros(s,0);
+    //pre-computation
+    for(int k=0; k<s; k++){
+            string st = strs[k];
+            for(int i=0; i<st.size(); i++){
+                if(st[i]=='0') zeros[k]++;
+                else ones[k]++;
+            }
+        }
+    // for(int i=0; i<s; i++) cout<<zeros[i]<<" ";
+    // cout<<endl;
+    // for(int i=0; i<s; i++) cout<<ones[i]<<" ";
+    // cout<<endl;
+    return solve(0,m,n,ones,zeros);
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

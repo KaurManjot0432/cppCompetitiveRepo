@@ -53,7 +53,30 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
+int dp[10004];
+int solve(int amount, vector<int>& coins){
+    if(amount==0) return 0;
+    if(dp[amount]!=-1) return dp[amount];
+    int ans = INT_MAX;
+    for(int i=1; i<=coins.size(); i++){
+        if(amount-coins[i] >= 0){
+            ans = min(ans, solve(amount-coins[i],coins));
+        } else {
+            break;
+        }
+    }
+    if(ans==INT_MAX) return INT_MAX;
+    return dp[amount] = ans + 1;
+}
 
+int numSquares(int n){
+    memset(dp,-1,sizeof dp);
+    vector<int> coins(101);
+    for(int i=1; i<=100; i++){
+        coins[i] =  i*i;
+    }
+    return solve(n, coins);
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();

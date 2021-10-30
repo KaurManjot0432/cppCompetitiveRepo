@@ -53,13 +53,54 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
-
+int blackbox(string s){
+    int p = 1,hashval = 0;
+    for(int i=0; i<s.size(); i++){
+        hashval = (hashval + ((s[i]-'a'+1)*p)%mod)%mod;
+        p = (p*31)%mod;
+    }
+    return hashval;
+}
+ll power(ll a, ll b){
+    ll ans = 1;
+    while(b){
+        if(b&1)
+            ans = (ans*a)%mod;
+        a = ((a%mod)*(a%mod)%mod);
+        b>>=1;
+    }
+    return ans%mod;
+}
+int rabinkarp(string text, string pat){
+    int tLen = text.size();
+    int pLen = pat.size();
+    int pathash = blackbox(pat);
+    int texthash = blackbox(text.substr(0,pLen));
+    int cnt = 0;
+    if(pathash==texthash) cnt++;
+    int l=0, r = pLen-1;
+    int prL = power(31,l);
+    int prR = power(31,r);
+    while(r<tLen){
+        texthash = (texthash - ((text[l]-'a'+1)*prL)%mod + mod)%mod;
+        l++;
+        prL = (prL*31)%mod;
+        r++;
+        prR = (prR*31)%mod;
+        texthash = (texthash + ((text[r]-'a'+1)*prR)%mod + mod)%mod;
+        pathash = (pathash*31)%mod;
+        if(pathash == texthash) cnt++;
+    }
+    return cnt;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
-
+    string text, pat;
+    cin>>text>>pat;
+    cout<<rabinkarp(text,pat)<<endl;
 
 	#ifndef ONLINE_JUDGE 
 	  clock_t end = clock();

@@ -53,12 +53,35 @@ void file_i_o()
 	    freopen("output.txt", "w", stdout);
 	#endif
 }
-
+int dp[30005][30005];
+string longestDupSubstring(string s) {
+    int n = s.size();
+    int maxLen = 0,idx = -1;
+    for(int i=0; i<=n; i++){
+        for(int j=0; j<=n; j++){
+            if(i==0 or j==0) dp[i][j] = 0;
+            else if(s[i-1]==s[j-1] and i!=j){
+                dp[i][j] = dp[i-1][j-1]+1;
+                if(dp[i][j]>maxLen){
+                    maxLen = dp[i][j];
+                    idx = i-1;
+                }
+            } else {
+                dp[i][j] = 0;
+            }
+        }
+    }
+    log(maxLen);
+    return s;
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
 	file_i_o();
 	// Write your code here....
+    string s;
+    cin>>s;
+    // cout<<longestDupSubstring(s);
 
 
 	#ifndef ONLINE_JUDGE 

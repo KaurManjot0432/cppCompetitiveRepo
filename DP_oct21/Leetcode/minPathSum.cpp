@@ -54,6 +54,24 @@ void file_i_o()
 	#endif
 }
 
+int minPathSum(vector<vector<int>>& grid) {
+    int m = grid.size();
+    int n = grid[0].size();
+    vector<int> dp(n);
+    dp[0] = grid[0][0];
+    loop(i,1,n-1){
+        dp[i] = dp[i-1] + grid[0][i];
+    }
+    loop(i,1,m-1){
+        vector<int> temp(n);
+        temp[0] = dp[0] + grid[i][0];
+        loop(j,1,n-1){
+            temp[j] = grid[i][j] + min(dp[j], temp[j-1]);
+        }
+        dp = temp;
+    }
+    return dp[n-1];
+}
 
 int main(int argc, char const *argv[]) {
 	clock_t begin = clock();
